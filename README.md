@@ -1,5 +1,7 @@
 # template-single-page
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/noliaki/template-single-page.svg)](https://greenkeeper.io/)
+
 [![Build Status](https://travis-ci.org/noliaki/template-single-page.svg?branch=master)](https://travis-ci.org/noliaki/template-single-page)
 
 This required `yarn`
