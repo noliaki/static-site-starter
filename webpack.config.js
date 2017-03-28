@@ -1,7 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 
-module.exports = {
+const conf = {
   context: path.resolve('./src', 'js/'),
   entry: {
     index: './index.js'
@@ -15,7 +15,7 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use:[{
+        use: [{
           loader: 'babel-loader',
           query: {
             presets: ['es2015']
@@ -32,4 +32,16 @@ module.exports = {
     //   "window.jQuery": "jquery"
     // })
   ]
-};
+}
+
+if (process.env.NODE_ENV !== 'production') {
+  conf.watch = true
+  conf.cache = true
+  conf.devtool = 'source-map'
+  conf.plugins.push(new webpack.LoaderOptionsPlugin({
+    debug: true
+  }))
+}
+
+
+module.exports = conf
