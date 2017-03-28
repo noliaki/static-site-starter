@@ -39,5 +39,11 @@
     "pug-cli": "^1.0.0-alpha6",
     "stylus": "^0.54.5",
     "webpack": "^2.3.2"
+  },
+  "devDependencies": {
+    "eslint": "^3.18.0",
+    "eslint-config-standard": "^7.1.0",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^2.1.1"
   }
 }
