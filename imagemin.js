@@ -4,7 +4,7 @@ const imageminMozjpeg = require('imagemin-mozjpeg')
 const imageminPngquant = require('imagemin-pngquant')
 
 const srcPath = path.resolve('./src/')
-const distPath = path.resolve('./dist/')
+const distPath = process.env.NODE_ENV !== 'production' ? path.resolve('./dist-dev/') : path.resolve('./dist/')
 
 imagemin([`${srcPath}/**/*.{jpg,gif,png}`], distPath, {
   useFolderStructure: true,
