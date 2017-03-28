@@ -2,7 +2,7 @@ const path = require('path')
 const webpack = require('webpack')
 
 const conf = {
-  context: path.resolve('./src', 'js/'),
+  context: path.resolve('./src/webroot', 'js/'),
   entry: {
     index: './index.js'
   },
@@ -36,6 +36,7 @@ const conf = {
 
 if (process.env.NODE_ENV !== 'production') {
   conf.watch = true
+  conf.output.path = path.resolve('./dist-dev', 'js')
   conf.cache = true
   conf.devtool = 'source-map'
   conf.plugins.push(new webpack.LoaderOptionsPlugin({
