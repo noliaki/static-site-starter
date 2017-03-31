@@ -27,7 +27,7 @@
     "babel-loader": "^6.4.1",
     "babel-preset-es2015": "^6.24.0",
     "browser-sync": "^2.18.8",
-    "cross-env": "^3.2.4",
+    "cross-env": "^4.0.0",
     "imagemin": "silviopaganini/imagemin",
     "imagemin-mozjpeg": "^6.0.0",
     "imagemin-pngquant": "^5.0.0",
