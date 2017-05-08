@@ -14,16 +14,28 @@ export interface WinState {
 window.addEventListener('resize', debounce(winResize, 500), false)
 window.addEventListener('scroll', throttle(winScroll, 100), false)
 
+function winWidth (): number {
+  return doc.documentElement.clientWidth
+}
+
+function winHeight (): number {
+  return window.innerHeight || doc.documentElement.clientHeight || 0
+}
+
+function scrollTop (): number {
+  return (window.pageYOffset !== undefined) ? window.pageYOffset : bodyEle.scrollTop
+}
+
 function winResize (event: Event): void {
   const param: WinState = {
-    width: doc.documentElement.clientWidth,
-    height: window.innerHeight || doc.documentElement.clientHeight || 0,
-    scrollTop: (window.pageYOffset !== undefined) ? window.pageYOffset : bodyEle.scrollTop
+    width: winWidth(),
+    height: winHeight(),
+    scrollTop: scrollTop()
   }
 
   eventEmitter.emit('winResize', param)
 }
 
 function winScroll (event: Event): void {
-  eventEmitter.emit('winScroll', (window.pageYOffset !== undefined) ? window.pageYOffset : bodyEle.scrollTop)
+  eventEmitter.emit('winScroll', scrollTop())
 }
