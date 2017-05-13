@@ -14,23 +14,21 @@
     "build:production": "cross-env NODE_ENV=production DIST_DIR=./dist/ run-s clean mkdir imagemin start:build:production",
     "clean": "rm -fr $DIST_DIR",
     "mkdir": "mkdir -p $DIST_DIR/css",
-    "start:build": "run-p \"pug -- -w ./src/webroot\" \"stylus -- -w ./src/webroot\" webpack imagemin",
+    "start:build": "run-p \"pug -- -w ./src/webroot\" \"stylus -- -w ./src/webroot\" webpack imagemin browser-sync",
     "start:build:production": "run-p pug stylus webpack imagemin",
     "stylus": "stylus -u autoprefixer-stylus --with \"{ browsers: ['android >= 4'] }\" -o $DIST_DIR/css --compress ./src/webroot/**/*.styl",
     "pug": "pug --basedir ./src/ --out $DIST_DIR --obj ./page-data.js ./src/webroot",
     "webpack": "webpack --config ./webpack.config.js",
-    "imagemin": "node ./imagemin.js"
+    "imagemin": "node ./imagemin.js",
+    "browser-sync": "browser-sync start --server $DIST_DIR --files $DIST_DIR"
   },
   "dependencies": {
     "autoprefixer-stylus": "^0.13.0",
-    "babel-core": "^6.24.1",
-    "babel-loader": "^7.0.0",
     "babel-plugin-lodash": "^3.2.11",
-    "babel-preset-es2015": "^6.24.1",
     "browser-sync": "^2.18.8",
-    "cross-env": "^4.0.0",
+    "cross-env": "^5.0.0",
     "es6-promise": "^4.1.0",
-    "imagemin": "^5.2.2",
+    "imagemin": "^5.3.1",
     "imagemin-mozjpeg": "^6.0.0",
     "imagemin-pngquant": "^5.0.0",
     "lodash": "^4.17.4",
@@ -43,10 +41,5 @@
     "typescript": "^2.3.2",
     "webpack": "^2.5.1"
   },
-  "devDependencies": {
-    "eslint": "^3.19.0",
-    "eslint-config-standard": "^10.2.1",
-    "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^3.0.1"
-  }
+  "devDependencies": {}
 }

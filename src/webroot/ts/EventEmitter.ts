@@ -3,7 +3,7 @@ interface Listener {
 }
 
 class EventDispatcher {
-  private listener: Listener
+  private listener: Listener = {}
 
   public on (eventName: string, func: Function): void {
     if (!this.listener[eventName]) {

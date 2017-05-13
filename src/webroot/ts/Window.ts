@@ -1,9 +1,11 @@
 import eventEmitter from './EventEmitter'
-import * as debounce from 'lodash/debounce'
-import * as throttle from 'lodash/throttle'
+import debounce from 'lodash/debounce'
+import throttle from 'lodash/throttle'
 
 const doc: Document = window.document
 const bodyEle: HTMLElement = (doc.documentElement || doc.body.parentNode as HTMLElement || doc.body)
+const debounceInterval: number = 500
+const throttleInterval: number = 100
 
 export interface WinState {
   width: number
@@ -11,8 +13,8 @@ export interface WinState {
   scrollTop: number
 }
 
-window.addEventListener('resize', debounce(winResize, 500), false)
-window.addEventListener('scroll', throttle(winScroll, 100), false)
+window.addEventListener('resize', debounce(winResize, debounceInterval), false)
+window.addEventListener('scroll', throttle(winScroll, throttleInterval), false)
 
 function winWidth (): number {
   return doc.documentElement.clientWidth
