@@ -22,7 +22,7 @@
     "imagemin": "node ./imagemin.js"
   },
   "dependencies": {
-    "autoprefixer-stylus": "^0.13.0",
+    "autoprefixer-stylus": "^0.14.0",
     "babel-core": "^6.24.0",
     "babel-loader": "^7.0.0",
     "babel-preset-es2015": "^6.24.0",
