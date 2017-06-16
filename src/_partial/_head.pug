@@ -1,4 +1,4 @@
-head(prefix='og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# mixi: http://mixi-platform.com/ns#')
+head(itemscope, itemtype="http://schema.org/Article")
   meta(charset='utf-8')
   meta(http-equiv='X-UA-Compatible', content='IE=edge')
   meta(name='viewport', content='width=device-width,initial-scale=1.0')
@@ -12,6 +12,8 @@ head(prefix='og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# mixi: http://mixi-pl
 
   //- twitter
   include ./_head_meta_twitter
+
+  link(itemprop='image', href='')
 
   //-================ FAVICON ================-//
   link(rel='icon', href = '/favicon.ico')
