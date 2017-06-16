@@ -2,30 +2,36 @@ const path = require('path')
 const webpack = require('webpack')
 
 const conf = {
-  context: path.resolve('./src/webroot', 'js/'),
+  context: path.resolve('./src/webroot', 'ts/'),
   entry: {
-    index: './index.js'
+    index: './index.ts'
   },
   output: {
-    path: path.resolve('./dist', 'js'),
+    path: path.resolve(process.env.DIST_DIR, 'js'),
     filename: '[name].js'
   },
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.ts$/,
         exclude: /node_modules/,
         use: [{
-          loader: 'babel-loader',
+          loader: 'ts-loader',
           query: {
-            presets: ['es2015']
+            plugins: ['lodash']
           }
         }]
       }
     ]
   },
+  resolve: {
+    extensions: ['.ts', '.js']
+  },
   plugins: [
-    new webpack.optimize.UglifyJsPlugin()
+    new webpack.optimize.UglifyJsPlugin({
+      drop_debugger: true,
+      drop_console: true
+    })
     // new webpack.ProvidePlugin({
     //   $: "jquery",
     //   jQuery: "jquery",
@@ -36,12 +42,13 @@ const conf = {
 
 if (process.env.NODE_ENV !== 'production') {
   conf.watch = true
-  conf.output.path = path.resolve('./dist-dev', 'js')
   conf.cache = true
   conf.devtool = 'source-map'
-  conf.plugins.push(new webpack.LoaderOptionsPlugin({
-    debug: true
-  }))
+  conf.plugins = [
+    new webpack.LoaderOptionsPlugin({
+      debug: true
+    })
+  ]
 }
 
 
