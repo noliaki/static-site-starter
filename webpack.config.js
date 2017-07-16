@@ -1,7 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
-
-module.exports = {
+const config = {
   context: path.resolve('./src', 'js/'),
   entry: {
     index: './index.js'
@@ -32,4 +31,17 @@ module.exports = {
     //   "window.jQuery": "jquery"
     // })
   ]
-};
+}
+
+if (process.env.NODE_ENV === 'development') {
+  config.watch = true
+  config.cache = true
+  config.devtool = 'source-map'
+  config.plugins = [
+    new webpack.LoaderOptionsPlugin({
+      debug: true
+    })
+  ]
+}
+
+module.exports config
