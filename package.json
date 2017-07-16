@@ -16,11 +16,11 @@
     "mkdir": "mkdir -p $DIST_DIR/css",
     "start:build": "run-p \"pug -- -w ./src/webroot\" \"stylus -- -w ./src/webroot\" webpack imagemin browser-sync",
     "start:build:production": "run-p pug stylus webpack imagemin",
-    "stylus": "stylus -u autoprefixer-stylus --with \"{ browsers: ['android >= 4'] }\" -o $DIST_DIR/css --compress ./src/webroot/**/*.styl",
+    "stylus": "stylus -u autoprefixer-stylus --with \"{ browsers: ['android >= 4'] }\" --out $DIST_DIR/css --compress ./src/webroot/**/*.styl",
     "pug": "pug --basedir ./src/ --out $DIST_DIR --obj ./page-data.js ./src/webroot",
     "webpack": "webpack --config ./webpack.config.js",
     "imagemin": "node ./imagemin.js",
-    "browser-sync": "browser-sync start --server $DIST_DIR --files $DIST_DIR"
+    "browser-sync": "browser-sync start --server $DIST_DIR --files $DIST_DIR --directory --port 8000"
   },
   "dependencies": {
     "autoprefixer-stylus": "^0.13.0",
