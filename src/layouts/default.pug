@@ -12,21 +12,21 @@ html(lang="ja")
   //- ------------------------------------
   //- include head element
   //-
-  include /_partial/_head
+  include /partials/head
 
   //- ------------------------------------
   //- begin body
   //-
-  body(id=domain.replace('.', '-'))
-    div= domain
+  body
+    div
     .main
       //- include global header
-      include /_partial/_header
+      include /partials/header
       .content
         //- put content
         block content
       //- include global footer
-      include /_partial/_footer
+      include /partials/footer
 
     //-================ SCRIPT ================-//
     block scripts

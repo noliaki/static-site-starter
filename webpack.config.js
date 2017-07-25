@@ -1,7 +1,8 @@
 const path = require('path')
 const webpack = require('webpack')
+
 const config = {
-  context: path.resolve('./src', 'js/'),
+  context: path.resolve('./src/docroot', 'js/'),
   entry: {
     index: './index.js'
   },
@@ -14,7 +15,7 @@ const config = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use:[{
+        use: [{
           loader: 'babel-loader',
           query: {
             presets: ['es2015']
@@ -24,12 +25,12 @@ const config = {
     ]
   },
   plugins: [
-    new webpack.optimize.UglifyJsPlugin()
-    // new webpack.ProvidePlugin({
-    //   $: "jquery",
-    //   jQuery: "jquery",
-    //   "window.jQuery": "jquery"
-    // })
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false,
+        drop_console: true
+      }
+    })
   ]
 }
 
@@ -44,4 +45,4 @@ if (process.env.NODE_ENV === 'development') {
   ]
 }
 
-module.exports config
+module.exports = config

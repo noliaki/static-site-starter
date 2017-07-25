@@ -1,16 +1,16 @@
 const path = require('path')
 const imagemin = require('imagemin')
-const imageminMozjpeg = require('imagemin-mozjpeg')
+const imageminJpegtran = require('imagemin-jpegtran')
 const imageminPngquant = require('imagemin-pngquant')
 
-const srcPath = path.resolve('./src/')
-const distPath = path.resolve('./dist/')
+const srcPath = path.resolve('./src/docroot')
+const distPath = path.resolve(process.env.NODE_ENV === 'production' ? './dist' : './dist-dev')
 
 imagemin([`${srcPath}/**/*.{jpg,gif,png}`], distPath, {
   useFolderStructure: true,
   removePath: srcPath,
   plugins: [
-    imageminMozjpeg(),
+    imageminJpegtran(),
     imageminPngquant({quality: '65-80'})
   ]
 }).then(files => {
