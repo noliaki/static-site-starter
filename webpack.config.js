@@ -35,6 +35,7 @@ const config = {
 }
 
 if (process.env.NODE_ENV === 'development') {
+  config.output.path = path.resolve('./dist-dev', 'js')
   config.watch = true
   config.cache = true
   config.devtool = 'source-map'
