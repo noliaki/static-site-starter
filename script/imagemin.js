@@ -1,18 +1,22 @@
 const path = require('path')
+const glob = require('glob')
 const imagemin = require('imagemin')
 const imageminSvgo = require('imagemin-svgo')
 
-const srcPath = path.resolve('./src/docroot/')
-const distPath = process.env.DIST_DIR ? path.resolve(process.env.DIST_DIR) : path.resolve('./dist/')
+const srcPath = path.resolve(`${__dirname}/../src/docroot`)
+const distPath = path.resolve(process.env.DIST_DIR || `${__dirname}../dist-dev`)
 
-imageCompress({
-  recursive: true
-})
+const images = glob.sync(`${srcPath}/**/*.{jpg,gif,png,svg}`)
 
-function imageCompress ({src = `${srcPath}/**/*.{jpg,gif,png,svg}`, dist = distPath, recursive = false} = {}) {
-  imagemin([src], dist, {
-    useFolderStructure: recursive,
-    removePath: recursive ? srcPath : '',
+for (let i = 0; i < images.length; i++) {
+  imageCompress({
+    src: [images[i]],
+    dist: path.resolve(distPath, path.relative(srcPath, images[i]))
+  })
+}
+
+function imageCompress ({src = images, dist = distPath} = {}) {
+  imagemin(src, dist, {
     plugins: [
       imageminSvgo({
         plugins: [
@@ -21,9 +25,11 @@ function imageCompress ({src = `${srcPath}/**/*.{jpg,gif,png,svg}`, dist = distP
       })
     ]
   }).then(files => {
-    console.log(files)
+    files.forEach(file => {
+      console.log(`compress: ${path.relative(distPath, file.path)}`)
+    })
   }, error => {
-    console.log(error)
+    throw new Error(error)
   })
 }
 

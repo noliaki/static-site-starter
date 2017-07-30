@@ -10,7 +10,7 @@ fs.watch(srcPath, { recursive: true }, (eventType, filename) => {
   }
 
   imageCompress({
-    src: path.resolve(srcPath, filename),
+    src: [path.resolve(srcPath, filename)],
     dist: path.resolve(distPath, path.dirname(filename))
   })
 })
