@@ -8,12 +8,12 @@ const distPath = path.resolve(process.env.DIST_DIR || `${__dirname}../dist-dev`)
 
 const images = glob.sync(`${srcPath}/**/*.{jpg,gif,png,svg}`)
 
-for (let i = 0; i < images.length; i++) {
+images.forEach(image => {
   imageCompress({
-    src: [images[i]],
-    dist: path.resolve(distPath, path.relative(srcPath, images[i]))
+    src: [image],
+    dist: path.resolve(distPath, path.relative(srcPath, path.dirname(image)))
   })
-}
+})
 
 function imageCompress ({src = images, dist = distPath} = {}) {
   imagemin(src, dist, {
