@@ -1,6 +1,14 @@
 {
+  "parser": "babel-eslint",
   "extends": "standard",
+  "plugins": [
+    "flowtype"
+  ],
   "env": {
     "browser": true
+  },
+  "rules": {
+    "flowtype/define-flow-type": 1,
+    "flowtype/use-flow-type": 1
   }
 }

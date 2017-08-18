@@ -1,0 +1,11 @@
+[ignore]
+<PROJECT_ROOT>/node_modules/.*
+<PROJECT_ROOT>/dist/.*
+<PROJECT_ROOT>/dist-dev/.*
+<PROJECT_ROOT>/script/.*
+
+[include]
+
+[libs]
+
+[options]
