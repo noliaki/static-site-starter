@@ -2,13 +2,15 @@
   "parser": "babel-eslint",
   "extends": "standard",
   "plugins": [
-    "flowtype"
+    "flowtype",
+    "flowtype-errors"
   ],
   "env": {
     "browser": true
   },
   "rules": {
     "flowtype/define-flow-type": 1,
-    "flowtype/use-flow-type": 1
+    "flowtype/use-flow-type": 1,
+    "flowtype-errors/show-errors": 2
   }
 }

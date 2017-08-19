@@ -6,12 +6,22 @@ interface Hoge {
 }
 
 const awesome: Hoge = {
-  ho: false,
+  ho: 'false',
   fu: 9
 }
 
+const obj = {
+  hoge: 2,
+  fuga: 3
+}
+
+const obj2 = {
+  ...obj,
+  fiz: 3
+}
+
 class Fuga {
-  static fiz: number = 10
+  static fiz: number = 3
 }
 
 Fuga.fiz = 20
