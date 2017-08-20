@@ -3,8 +3,8 @@ const glob = require('glob')
 const imagemin = require('imagemin')
 const imageminSvgo = require('imagemin-svgo')
 
-const srcPath = path.resolve(`${__dirname}/../src/docroot`)
-const distPath = path.resolve(process.env.DIST_DIR || `${__dirname}../dist-dev`)
+const srcPath = require('./config').src
+const distPath = require('./config').dist
 
 const images = glob.sync(`${srcPath}/**/*.{jpg,gif,png,svg}`)
 
@@ -33,8 +33,4 @@ function imageCompress ({src = images, dist = distPath} = {}) {
   })
 }
 
-module.exports = {
-  srcPath,
-  distPath,
-  imageCompress
-}
+module.exports = imageCompress
