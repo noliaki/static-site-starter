@@ -5,7 +5,7 @@ const shell = require('shelljs')
 const srcPath = require('./config').src
 const distPath = require('./config').dist
 
-const files = glob.sync(`${srcPath}/**/*.*`, {
+const files = glob.sync(`${srcPath}/**/*.!(pug|styl|jpg|jpeg|gif|png|svg|js)`, {
   nocase: true
 })
 
