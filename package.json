@@ -10,9 +10,10 @@
   "author": "noliaki <noliaki.mobile@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build:dev": "cross-env NODE_ENV=development DIST_DIR=./dist-dev run-s clean mkdir start:build",
-    "build:production": "cross-env NODE_ENV=production DIST_DIR=./dist run-s clean mkdir start:build:production",
+    "build:dev": "cross-env NODE_ENV=development DIST_DIR=./dist-dev run-s clean mkdir cp:files start:build",
+    "build:production": "cross-env NODE_ENV=production DIST_DIR=./dist run-s clean mkdir cp:files start:build:production",
     "clean": "rm -fr $DIST_DIR",
+    "cp:files": "node script/cp-files.js",
     "mkdir": "mkdir -p $DIST_DIR/css",
     "start:build:production": "run-p pug stylus webpack imagemin",
     "start:build": "run-p \"pug -- -w ./src/docroot\" \"stylus -- -w ./src/docroot\" webpack imagemin watch:image browser-sync",
