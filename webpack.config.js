@@ -1,10 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
-const FlowStatusWebpackPlugin = require('flow-status-webpack-plugin')
 const plugins = [
-  new FlowStatusWebpackPlugin({
-    failOnError: true
-  }),
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
   })
@@ -12,12 +8,12 @@ const plugins = [
 const distDir = process.env.DIST_DIR || './dist'
 
 const config = {
-  context: path.resolve('./src/docroot', 'js/'),
+  context: path.resolve('./src/docroot'),
   entry: {
-    index: './index.js'
+    './js/index': './js/index.js'
   },
   output: {
-    path: path.resolve(distDir, 'js'),
+    path: path.resolve(distDir),
     filename: '[name].js'
   },
   module: {
