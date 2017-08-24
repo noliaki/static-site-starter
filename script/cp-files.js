@@ -26,9 +26,14 @@ const copyFile = function copyFile (src, dist) {
   const readStream = fs.createReadStream(src)
   const writeStream = fs.createWriteStream(dist)
 
-  writeStream.on('close', (event) => {
-    console.log(`Done copy: ${dist}`)
-  })
+  writeStream
+    .on('close', event => {
+      console.log(`Done copy: ${dist}`)
+    })
+    .on('error', event => {
+      console.log(event)
+      throw new Error(event)
+    })
 
   console.log(`Start copy: ${src}`)
   readStream.pipe(writeStream)
