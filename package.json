@@ -17,7 +17,7 @@
     "mkdir": "node ./script/mkdir.js",
     "start:build:production": "run-p pug stylus webpack imagemin",
     "start:build": "run-p \"pug -- -w ./src/docroot\" \"stylus -- -w ./src/docroot\" webpack imagemin browser-sync",
-    "pug": "pug --basedir ./src/ --out $DIST_DIR ./src/docroot",
+    "pug": "pug --basedir ./src/ --obj ./pug-obj.js --out $DIST_DIR ./src/docroot",
     "stylus": "stylus -u autoprefixer-stylus --with \"{ browsers: ['android >= 4'] }\" -o $DIST_DIR/css --compress ./src/docroot/css/style.styl",
     "webpack": "webpack --config ./script/webpack.config.js",
     "imagemin": "node ./script/imagemin.js",
