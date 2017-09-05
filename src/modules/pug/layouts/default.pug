@@ -5,7 +5,7 @@ include /variables
 //-
 append variables
   -
-    const URL = `${protocol}://${domain}${filename.replace('src/docroot', '').replace(/(\.pug)$/, '.html')}`
+    const URL = `${protocol}://${domain}${filename.replace(/(\.\/)?src\/docroot/, '').replace(/(\.pug)$/, '.html')}`
 
 //- ------------------------------------
 //- HTML CONTENTS
