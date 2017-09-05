@@ -3,13 +3,13 @@ const path = require('path')
 const glob = require('glob')
 const shell = require('shelljs')
 
-const srcPath = require('./config').src
+const docRoot = require('./config').docroot
 const distPath = require('./config').dist
 
-const dirs = glob.sync(`${srcPath}/**/`)
+const dirs = glob.sync(`${docRoot}/**/`)
 
 dirs.forEach(dir => {
-  const dirname = path.resolve(distPath, path.relative(srcPath, dir))
+  const dirname = path.resolve(distPath, path.relative(docRoot, dir))
 
   fs.access(dirname, error => {
     if (!error) {

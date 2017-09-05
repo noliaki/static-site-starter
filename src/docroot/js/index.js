@@ -1,2 +1,1 @@
-const hoge = 'hoge'
-
+import '@/sns-share'

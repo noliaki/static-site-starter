@@ -4,17 +4,23 @@ const plugins = [
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
   })
 ]
-const srcDir = require('./config').src
+const docRoot = require('./config').docroot
 const distDir = require('./config').dist
+const srcDir = require('./config').src
 
 const config = {
-  context: srcDir,
+  context: docRoot,
   entry: {
     './js/index': './js/index.js'
   },
   output: {
     path: distDir,
     filename: '[name].js'
+  },
+  resolve: {
+    alias: {
+      '@': `${srcDir}/modules/js`
+    }
   },
   module: {
     rules: [

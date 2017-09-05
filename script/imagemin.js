@@ -4,10 +4,10 @@ const imagemin = require('imagemin')
 const imageminSvgo = require('imagemin-svgo')
 const fs = require('fs')
 
-const srcPath = require('./config').src
+const docRoot = require('./config').docroot
 const distPath = require('./config').dist
 
-const images = glob.sync(`${srcPath}/**/*.{jpg,jpeg,gif,png,svg}`, {
+const images = glob.sync(`${docRoot}/**/*.{jpg,jpeg,gif,png,svg}`, {
   nocase: true
 })
 const promises = []
@@ -16,7 +16,7 @@ images.forEach(image => {
   promises.push(
     imageCompress({
       src: [image],
-      dist: path.resolve(distPath, path.relative(srcPath, path.dirname(image)))
+      dist: path.resolve(distPath, path.relative(docRoot, path.dirname(image)))
     })
   )
 })
@@ -47,14 +47,14 @@ function imageCompress ({src = images, dist = distPath} = {}) {
 }
 
 function watch () {
-  fs.watch(srcPath, { recursive: true }, (eventType, filename) => {
+  fs.watch(docRoot, { recursive: true }, (eventType, filename) => {
     console.log(filename)
     if (!/(\.(jpg|jpeg|png|gif|svg))$/i.test(filename)) {
       return
     }
 
     imageCompress({
-      src: [path.resolve(srcPath, filename)],
+      src: [path.resolve(docRoot, filename)],
       dist: path.resolve(distPath, path.dirname(filename))
     }).then(files => {
       files.forEach(file => {

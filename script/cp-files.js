@@ -2,15 +2,15 @@ const fs = require('fs')
 const path = require('path')
 const glob = require('glob')
 const shell = require('shelljs')
-const srcPath = require('./config').src
+const docRoot = require('./config').docroot
 const distPath = require('./config').dist
 
-const files = glob.sync(`${srcPath}/**/*.!(pug|styl|jpg|jpeg|gif|png|svg|js)`, {
+const files = glob.sync(`${docRoot}/**/*.!(pug|styl|jpg|jpeg|gif|png|svg|js)`, {
   nocase: true
 })
 
 files.forEach(file => {
-  const distFile = path.resolve(distPath, path.relative(srcPath, file))
+  const distFile = path.resolve(distPath, path.relative(docRoot, file))
   fs.access(path.dirname(distFile), error => {
     if (!error) {
       copyFile(file, distFile)

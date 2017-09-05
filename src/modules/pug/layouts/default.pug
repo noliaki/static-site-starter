@@ -1,9 +1,11 @@
+include /variables
+
 //- ------------------------------------
 //- include local variables
 //-
-block variables
+append variables
   -
-    const URL = `${protocol}://${domain}${filename.replace(/(\.pug)$/, '.html').replace('src/docroot', '')}`
+    const URL = `${protocol}://${domain}${filename.replace('src/docroot', '').replace(/(\.pug)$/, '.html')}`
 
 //- ------------------------------------
 //- HTML CONTENTS
