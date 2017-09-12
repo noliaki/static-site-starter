@@ -9,34 +9,28 @@ const files = glob.sync(`${docRoot}/**/*.!(pug|styl|jpg|jpeg|gif|png|svg|js)`, {
   nocase: true
 })
 
-files.forEach(file => {
-  const distFile = path.resolve(distPath, path.relative(docRoot, file))
-  fs.access(path.dirname(distFile), error => {
-    if (!error) {
-      copyFile(file, distFile)
-      return
-    }
+const copyFile = filename => {
+  const distFile = path.resolve(distPath, path.relative(docRoot, filename))
+  const readStream = fs.createReadStream(filename)
+  const writeStream = fs.createWriteStream(distFile)
 
-    shell.mkdir('-p', path.dirname(distFile))
-    copyFile(file, distFile)
-  })
-})
-
-const copyFile = function copyFile (src, dist) {
-  const readStream = fs.createReadStream(src)
-  const writeStream = fs.createWriteStream(dist)
+  shell.mkdir('-p', path.dirname(distFile))
 
   writeStream
     .on('close', event => {
-      console.log(`Done copy: ${dist}`)
+      console.log(`Done copy: ${distFile}`)
     })
     .on('error', event => {
       console.log(event)
       throw new Error(event)
     })
 
-  console.log(`Start copy: ${src}`)
+  console.log(`Start copy: ${filename}`)
   readStream.pipe(writeStream)
 }
+
+files.forEach(file => {
+  copyFile(file)
+})
 
 module.exports = copyFile
