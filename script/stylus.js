@@ -36,14 +36,10 @@ files.forEach(file => {
 function writeFile (filename, string) {
   const distPath = path.resolve(dist, path.relative(docRoot, filename))
 
-  fs.writeFile(distPath.replace(/\.styl/, '.css'), string, error => {
-    if (error) {
-      if (error.code === 'ENOENT') {
-        shell.mkdir('-p', path.dirname(distPath))
-      } else {
-        throw error
-      }
-    }
+  shell.mkdir('-p', path.dirname(distPath))
+
+  fs.writeFile(distPath.replace(/(\.styl)$/, '.css'), string, error => {
+    if (error) throw error
 
     console.log(`WRITTEN: ${distPath}`)
   })
