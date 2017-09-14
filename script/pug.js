@@ -3,6 +3,7 @@ const glob = require('glob')
 const path = require('path')
 const fs = require('fs')
 const shell = require('shelljs')
+const url = require('url')
 
 const docRoot = require('./config').docroot
 const src = require('./config').src
@@ -10,11 +11,13 @@ const dist = require('./config').dist
 
 const files = glob.sync(`${docRoot}/**/*.pug`)
 
-const renderPug = filename => {
-  const html = pug.renderFile(filename, {
-    basedir: `${src}/modules/pug`,
-    pretty: true
-  })
+const option = {
+  basedir: `${src}/modules/pug`,
+  pretty: true
+}
+
+const renderPug = async filename => {
+  const html = await compile(filename)
 
   const distPath = path.resolve(dist, path.relative(docRoot, filename))
 
@@ -27,6 +30,37 @@ const renderPug = filename => {
   })
 }
 
+const compile = (filename) => {
+  return new Promise((resolve, reject) => {
+    pug.renderFile(filename, option, (error, html) => {
+      if (error) {
+        reject(error)
+        throw error
+      }
+
+      resolve(html)
+    })
+  })
+}
+
 files.forEach(file => {
   renderPug(file)
 })
+
+// middleware for browsersync
+module.exports = async (req, res, next) => {
+  const requestPath = url.parse(req.url).pathname
+
+  console.log(requestPath)
+
+  if (!(/(\.html)$/.test(requestPath))) {
+    next()
+    return
+  }
+
+  const filePath = path.join(docRoot, requestPath.replace(/(\.html)$/, '.pug'))
+  const html = await compile(filePath)
+
+  res.end(html)
+  next()
+}
