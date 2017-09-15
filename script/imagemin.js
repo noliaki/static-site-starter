@@ -2,41 +2,13 @@ const path = require('path')
 const glob = require('glob')
 const imagemin = require('imagemin')
 const imageminSvgo = require('imagemin-svgo')
-const fs = require('fs')
 
 const docRoot = require('./config').docroot
 const dist = require('./config').dist
 
-const files = glob.sync(`${docRoot}/**/*.{jpg,jpeg,gif,png,svg}`, {
-  nocase: true
-})
-// const promises = []
+const isImage = /(\.(jpg|jpeg|gif|png|svg))$/i
 
-files.forEach(file => {
-  compressImage(file)
-})
-
-// Promise.all(promises).then(resolves => {
-//   resolves.forEach(resolve => {
-//     console.log(resolve)
-//   })
-// }, reason => {
-//   throw new Error(reason)
-// })
-
-// function imageCompress ({src = images, dist = dist} = {}) {
-//   return imagemin(src, dist, {
-//     plugins: [
-//       imageminSvgo({
-//         plugins: [
-//           {removeViewBox: false}
-//         ]
-//       })
-//     ]
-//   })
-// }
-
-function compressImage (filename) {
+const compressImage = filename => {
   const distPath = path.resolve(dist, path.relative(docRoot, path.dirname(filename)))
 
   imagemin([filename], distPath, {
@@ -49,27 +21,28 @@ function compressImage (filename) {
     ]
   }).then(files => {
     files.forEach(file => {
-      console.log(file)
+      console.log(`imagemin compress: ${file.path}`)
     })
   })
 }
 
-// function watch () {
-//   fs.watch(docRoot, { recursive: true }, (eventType, filename) => {
-//     console.log(filename)
-//     if (!/(\.(jpg|jpeg|png|gif|svg))$/i.test(filename)) {
-//       return
-//     }
+const exec = () => {
+  const files = glob.sync(`${docRoot}/**/*.{jpg,jpeg,gif,png,svg}`, {
+    nocase: true,
+    nodir: true
+  })
 
-//     imageCompress({
-//       src: [path.resolve(docRoot, filename)],
-//       dist: path.resolve(distPath, path.dirname(filename))
-//     }).then(files => {
-//       files.forEach(file => {
-//         console.log(`compress: ${path.relative(distPath, file.path)}`)
-//       })
-//     }, error => {
-//       throw new Error(error)
-//     })
-//   })
-// }
+  files.forEach(file => {
+    compressImage(file)
+  })
+}
+
+if (process.env.NODE_ENV === 'production') {
+  exec()
+}
+
+module.exports = {
+  exec,
+  isImage,
+  compressImage
+}

@@ -9,9 +9,7 @@ const docRoot = require('./config').docroot
 const src = require('./config').src
 const dist = require('./config').dist
 
-const files = glob.sync(`${docRoot}/**/*.pug`)
-
-const option = {
+const defaultOption = {
   basedir: `${src}/modules/pug`,
   pretty: true
 }
@@ -23,14 +21,20 @@ const renderPug = async filename => {
 
   shell.mkdir('-p', path.dirname(distPath))
 
-  fs.writeFile(distPath.replace(/(\.pug)$/, '.html'), html, error => {
+  const htmlFileName = distPath.replace(/(\.pug)$/, '.html')
+
+  fs.writeFile(htmlFileName, html, error => {
     if (error) throw error
 
-    console.log(distPath.replace(/(\.pug)$/, '.html'))
+    console.log(`CREATED pug -> html: ${htmlFileName}`)
   })
 }
 
-const compile = (filename) => {
+const compile = filename => {
+  const option = Object.assign(defaultOption, {
+    filePath: path.relative(docRoot, filename)
+  })
+
   return new Promise((resolve, reject) => {
     pug.renderFile(filename, option, (error, html) => {
       if (error) {
@@ -43,20 +47,28 @@ const compile = (filename) => {
   })
 }
 
-files.forEach(file => {
-  renderPug(file)
-})
+const exec = () => {
+  const files = glob.sync(`${docRoot}/**/*.pug`)
+
+  files.forEach(file => {
+    renderPug(file)
+  })
+}
+
+if (process.env.NODE_ENV === 'production') {
+  exec()
+}
 
 // middleware for browsersync
 module.exports = async (req, res, next) => {
   const requestPath = url.parse(req.url).pathname
 
-  console.log(requestPath)
-
   if (!(/(\.html)$/.test(requestPath))) {
     next()
     return
   }
+
+  console.log(`pug compile: ${requestPath}`)
 
   const filePath = path.join(docRoot, requestPath.replace(/(\.html)$/, '.pug'))
   const html = await compile(filePath)

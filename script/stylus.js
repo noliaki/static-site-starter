@@ -4,45 +4,85 @@ const fs = require('fs')
 const path = require('path')
 const glob = require('glob')
 const shell = require('shelljs')
+const url = require('url')
 
 const src = require('./config').src
 const dist = require('./config').dist
 const docRoot = require('./config').docroot
 
-const files = glob.sync(`${docRoot}/**/*.styl`)
+const browsers = [
+  'ie >= 6'
+]
 
-const convertStylus = function (filename) {
+const convertStylus = async filename => {
+  const css = await compile(filename)
+
+  writeFile(filename, css)
+}
+
+const compile = filename => {
   const str = fs.readFileSync(filename, {
     encoding: 'utf8'
   })
 
-  stylus(str)
-    .include(`${src}/modules/stylus`)
-    .use(autoprefixer({
-      browsers: ['ie >= 6']
-    }))
-    .set('compress', true)
-    .render((err, output) => {
-      if (err) throw err
+  return new Promise((resolve, reject) => {
+    stylus(str)
+      .include(`${src}/modules/stylus`)
+      .use(autoprefixer({
+        browsers
+      }))
+      .set('compress', true)
+      .render((error, output) => {
+        if (error) {
+          reject(error)
+          throw error
+        }
 
-      writeFile(filename, output)
-    })
+        resolve(output)
+      })
+  })
 }
-
-files.forEach(file => {
-  convertStylus(file)
-})
 
 function writeFile (filename, string) {
   const distPath = path.resolve(dist, path.relative(docRoot, filename))
 
   shell.mkdir('-p', path.dirname(distPath))
 
-  fs.writeFile(distPath.replace(/(\.styl)$/, '.css'), string, error => {
+  const cssFileName = distPath.replace(/(\.styl)$/, '.css')
+
+  fs.writeFile(cssFileName, string, error => {
     if (error) throw error
 
-    console.log(`WRITTEN: ${distPath}`)
+    console.log(`CREATED stylus -> css: ${cssFileName}`)
   })
 }
 
-module.exports = convertStylus
+const exec = () => {
+  const files = glob.sync(`${docRoot}/**/*.styl`)
+
+  files.forEach(file => {
+    convertStylus(file)
+  })
+}
+
+if (process.env.NODE_ENV === 'production') {
+  exec()
+}
+
+// middleware for browsersync
+module.exports = async (req, res, next) => {
+  const requestPath = url.parse(req.url).pathname
+
+  if (!(/(\.css)$/.test(requestPath))) {
+    next()
+    return
+  }
+
+  console.log(`stylus compile: ${requestPath}`)
+
+  const filePath = path.join(docRoot, requestPath.replace(/(\.css)$/, '.styl'))
+  const css = await compile(filePath)
+
+  res.end(css)
+  next()
+}

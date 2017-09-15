@@ -5,7 +5,7 @@ include /variables
 //-
 append variables
   -
-    const URL = `${protocol}://${domain}${filename.replace(/(\.\/)?src\/docroot/, '').replace(/(\.pug)$/, '.html')}`
+    const URL = `${protocol}://${domain}/${locals.filePath.replace(/(\.pug)$/, '.html')}`
 
 //- ------------------------------------
 //- HTML CONTENTS
@@ -22,15 +22,12 @@ html(lang="ja")
   //- begin body
   //-
   body
-    div
-    .main
-      //- include global header
-      include /global-header/index
-      .content
-        //- put content
-        block content
-      //- include global footer
-      include /global-footer/index
+    //- include global header
+    include /global-header/index
+    main
+      block content
+    //- include global footer
+    include /global-footer/index
 
-    //-================ SCRIPT ================-//
+    //- script
     block scripts

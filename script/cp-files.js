@@ -5,32 +5,40 @@ const shell = require('shelljs')
 const docRoot = require('./config').docroot
 const distPath = require('./config').dist
 
-const files = glob.sync(`${docRoot}/**/*.!(pug|styl|jpg|jpeg|gif|png|svg|js)`, {
-  nocase: true
-})
+const isNotTarget = /(\.(pug|styl|jpg|jpeg|gif|png|svg|js))$/i
 
-const copyFile = filename => {
+const copy = filename => {
+  if (isNotTarget.test(filename)) {
+    return
+  }
+
   const distFile = path.resolve(distPath, path.relative(docRoot, filename))
-  const readStream = fs.createReadStream(filename)
-  const writeStream = fs.createWriteStream(distFile)
 
   shell.mkdir('-p', path.dirname(distFile))
+  console.log(`copy start: ${distFile}`)
+  fs.copyFile(filename, distFile, error => {
+    if (error) throw error
 
-  writeStream
-    .on('close', event => {
-      console.log(`Done copy: ${distFile}`)
-    })
-    .on('error', event => {
-      console.log(event)
-      throw new Error(event)
-    })
-
-  console.log(`Start copy: ${filename}`)
-  readStream.pipe(writeStream)
+    console.log(`copy done: ${distFile}`)
+  })
 }
 
-files.forEach(file => {
-  copyFile(file)
-})
+const exec = () => {
+  const files = glob.sync(`${docRoot}/**/*`, {
+    nocase: true,
+    nodir: true
+  }).filter(file => !isNotTarget.test(file))
 
-module.exports = copyFile
+  files.forEach(file => {
+    copy(file)
+  })
+}
+
+if (process.env.NODE_ENV === 'production') {
+  exec()
+}
+
+module.exports = {
+  exec,
+  copy
+}
