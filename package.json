@@ -10,19 +10,17 @@
   "author": "noliaki <noliaki.mobile@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build:dev": "cross-env NODE_ENV=development DIST_DIR=./dist-dev run-s clean mkdir cp:files start:build",
-    "build:production": "cross-env NODE_ENV=production DIST_DIR=./dist run-s clean mkdir cp:files start:build:production",
+    "build:dev": "cross-env NODE_ENV=development DIST_DIR=./dist-dev run-s clean start:build:dev",
+    "build:production": "cross-env NODE_ENV=production DIST_DIR=./dist run-s clean cp:files start:build:production",
     "clean": "rm -fr $DIST_DIR",
     "cp:files": "node script/cp-files.js",
-    "mkdir": "node ./script/mkdir.js",
     "start:build:production": "run-p pug stylus webpack imagemin",
-    "start:build": "run-p \"pug -- -w ./src/docroot\" \"stylus -- -w ./src/docroot\" webpack imagemin browser-sync",
-    "pug": "pug --basedir ./src/modules/pug --out $DIST_DIR ./src/docroot",
-    "stylus": "stylus -u autoprefixer-stylus --with \"{ browsers: ['android >= 4'] }\" -o $DIST_DIR/css --compress --include ./src/modules/stylus ./src/docroot/css/style.styl",
+    "start:build:dev": "run-p webpack browser-sync",
+    "pug": "node ./script/pug.js",
+    "stylus": "node ./script/stylus.js",
     "webpack": "webpack --config ./script/webpack.config.js",
     "imagemin": "node ./script/imagemin.js",
-    "watch:image": "node ./script/watch-image-file.js",
-    "browser-sync": "browser-sync start --server $DIST_DIR --files $DIST_DIR --directory --port 8000"
+    "browser-sync": "node ./script/browser-sync.js"
   },
   "dependencies": {
     "autoprefixer-stylus": "^0.14.0",
@@ -44,7 +42,6 @@
     "imagemin-pngquant": "^5.0.1",
     "imagemin-svgo": "^5.2.2",
     "npm-run-all": "^4.0.2",
-    "pug-cli": "^1.0.0-alpha6",
     "shelljs": "^0.7.8",
     "stylus": "^0.54.5",
     "webpack": "^3.4.1"
