@@ -73,6 +73,7 @@ module.exports = async (req, res, next) => {
   const filePath = path.join(docRoot, requestPath.replace(/\.html$/, '.pug'))
   const html = await compile(filePath)
 
+  res.writeHead(200, {'Content-Type': 'text/html'})
   res.end(html)
   next()
 }

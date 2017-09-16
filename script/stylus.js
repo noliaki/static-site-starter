@@ -83,6 +83,7 @@ module.exports = async (req, res, next) => {
   const filePath = path.join(docRoot, requestPath.replace(/\.css$/, '.styl'))
   const css = await compile(filePath)
 
+  res.writeHead(200, {'Content-Type': 'text/css'})
   res.end(css)
   next()
 }

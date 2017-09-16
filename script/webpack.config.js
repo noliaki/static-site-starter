@@ -11,7 +11,7 @@ const srcDir = require('./config').src
 const config = {
   context: docRoot,
   entry: {
-    './js/index': './js/index.js'
+    './js/index': './ts/index.ts'
   },
   output: {
     path: distDir,
@@ -19,14 +19,15 @@ const config = {
   },
   resolve: {
     alias: {
-      '@': `${srcDir}/modules/js`
-    }
+      '@': `${srcDir}/modules/ts`
+    },
+    extensions: ['.js', '.ts']
   },
   module: {
     rules: [
       {
-        test: /\.js$/,
-        loader: 'babel-loader',
+        test: /\.ts$/,
+        loader: 'ts-loader',
         exclude: /node_modules/
       }
     ]

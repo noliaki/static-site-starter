@@ -5,7 +5,7 @@ const shell = require('shelljs')
 const docRoot = require('./config').docroot
 const distPath = require('./config').dist
 
-const isNotTarget = /\.(pug|styl|jpg|jpeg|gif|png|svg|js)$/i
+const isNotTarget = /\.(pug|styl|jpg|jpeg|gif|png|svg|js|ts)$/i
 
 const copy = filename => {
   if (isNotTarget.test(filename)) {

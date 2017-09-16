@@ -89,5 +89,5 @@ function validFile (filename) {
 }
 
 function ignoreFile (filename) {
-  return /\.js$/.test(filename) || /\/?\./.test(filename)
+  return /\.(js|ts)$/.test(filename) || /\/?\./.test(filename)
 }
