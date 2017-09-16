@@ -51,7 +51,7 @@ fs.watch(src, { recursive: true }, async (event, filename) => {
   const valid = await validFile(absolutePath)
 
   if (!valid) {
-    console.log('invalid file')
+    console.log('invalid')
     return
   }
 
@@ -67,13 +67,7 @@ fs.watch(src, { recursive: true }, async (event, filename) => {
     return
   }
 
-  fs.stat(absolutePath, (error, stats) => {
-    if (error || stats.isDirectory()) {
-      return
-    }
-
-    copyFile.copy(absolutePath)
-  })
+  copyFile.copy(absolutePath)
 })
 
 function validFile (filename) {
