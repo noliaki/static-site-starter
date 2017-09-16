@@ -6,7 +6,7 @@ const imageminSvgo = require('imagemin-svgo')
 const docRoot = require('./config').docroot
 const dist = require('./config').dist
 
-const isImage = /(\.(jpg|jpeg|gif|png|svg))$/i
+const isImage = /\.(jpe?g|gif|png|svg)$/i
 
 const compressImage = filename => {
   const distPath = path.resolve(dist, path.relative(docRoot, path.dirname(filename)))
@@ -27,12 +27,11 @@ const compressImage = filename => {
 }
 
 const exec = () => {
-  const files = glob.sync(`${docRoot}/**/*.{jpg,jpeg,gif,png,svg}`, {
-    nocase: true,
+  const files = glob.sync(`${docRoot}/**/*`, {
     nodir: true
   })
 
-  files.forEach(file => {
+  files.filter(file => isImage.test(file)).forEach(file => {
     compressImage(file)
   })
 }

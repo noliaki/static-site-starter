@@ -21,7 +21,7 @@ const renderPug = async filename => {
 
   shell.mkdir('-p', path.dirname(distPath))
 
-  const htmlFileName = distPath.replace(/(\.pug)$/, '.html')
+  const htmlFileName = distPath.replace(/\.pug$/, '.html')
 
   fs.writeFile(htmlFileName, html, error => {
     if (error) throw error
@@ -63,14 +63,14 @@ if (process.env.NODE_ENV === 'production') {
 module.exports = async (req, res, next) => {
   const requestPath = url.parse(req.url).pathname
 
-  if (!(/(\.html)$/.test(requestPath))) {
+  if (!(/\.html$/.test(requestPath))) {
     next()
     return
   }
 
   console.log(`pug compile: ${requestPath}`)
 
-  const filePath = path.join(docRoot, requestPath.replace(/(\.html)$/, '.pug'))
+  const filePath = path.join(docRoot, requestPath.replace(/\.html$/, '.pug'))
   const html = await compile(filePath)
 
   res.end(html)

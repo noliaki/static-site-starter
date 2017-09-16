@@ -16,7 +16,7 @@ const startPath = () => {
     return prev.length > value.length ? value : prev
   })
 
-  return `/${path.relative(docRoot, initFile).replace(/(\.pug)$/, '.html')}`
+  return `/${path.relative(docRoot, initFile).replace(/\.pug$/, '.html')}`
 }
 
 imageMin.exec()
@@ -56,7 +56,7 @@ fs.watch(src, { recursive: true }, async (event, filename) => {
   }
 
   // pug or stylus
-  if (/(\.(pug|styl))$/.test(filename)) {
+  if (/\.(pug|styl)$/.test(filename)) {
     bs.reload()
     return
   }
@@ -95,5 +95,5 @@ function validFile (filename) {
 }
 
 function ignoreFile (filename) {
-  return /(\.js)$/.test(filename) || /^\./.test(filename) || /\/\./.test(filename)
+  return /\.js$/.test(filename) || /\/?\./.test(filename)
 }

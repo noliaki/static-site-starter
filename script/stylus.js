@@ -48,7 +48,7 @@ function writeFile (filename, string) {
 
   shell.mkdir('-p', path.dirname(distPath))
 
-  const cssFileName = distPath.replace(/(\.styl)$/, '.css')
+  const cssFileName = distPath.replace(/\.styl$/, '.css')
 
   fs.writeFile(cssFileName, string, error => {
     if (error) throw error
@@ -73,14 +73,14 @@ if (process.env.NODE_ENV === 'production') {
 module.exports = async (req, res, next) => {
   const requestPath = url.parse(req.url).pathname
 
-  if (!(/(\.css)$/.test(requestPath))) {
+  if (!(/\.css$/.test(requestPath))) {
     next()
     return
   }
 
   console.log(`stylus compile: ${requestPath}`)
 
-  const filePath = path.join(docRoot, requestPath.replace(/(\.css)$/, '.styl'))
+  const filePath = path.join(docRoot, requestPath.replace(/\.css$/, '.styl'))
   const css = await compile(filePath)
 
   res.end(css)
