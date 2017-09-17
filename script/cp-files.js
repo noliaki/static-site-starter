@@ -1,7 +1,7 @@
-const fs = require('fs')
+const fs = require('fs-extra')
 const path = require('path')
 const glob = require('glob')
-const shell = require('shelljs')
+// const shell = require('shelljs')
 const docRoot = require('./config').docroot
 const distPath = require('./config').dist
 
@@ -14,9 +14,8 @@ const copy = filename => {
 
   const distFile = path.resolve(distPath, path.relative(docRoot, filename))
 
-  shell.mkdir('-p', path.dirname(distFile))
-  console.log(`copy start: ${distFile}`)
-  fs.copyFile(filename, distFile, error => {
+  fs.ensureDirSync(path.dirname(distFile))
+  fs.copy(filename, distFile, error => {
     if (error) throw error
 
     console.log(`copy done: ${distFile}`)

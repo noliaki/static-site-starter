@@ -1,3 +1,5 @@
+import 'babel-polyfill'
+
 const anchor = document.querySelectorAll('a')
 
 anchor.forEach(a => {
@@ -26,6 +28,10 @@ function hoge () {
 }
 
 const hoe = [1,2,3,9,1,2]
+
+hoe.find((current) => {
+  return current === 9
+})
 
 console.log(...hoe)
 fuga()

@@ -1,4 +1,4 @@
-const fs = require('fs')
+const fs = require('fs-extra')
 const path = require('path')
 const glob = require('glob')
 const bs = require('browser-sync').create()
@@ -89,5 +89,5 @@ function validFile (filename) {
 }
 
 function ignoreFile (filename) {
-  return /\.(js|ts)$/.test(filename) || /\/?\./.test(filename)
+  return /\.(js|ts)$/.test(filename) || /^modules\//.test(filename) || /\/\./.test(filename)
 }

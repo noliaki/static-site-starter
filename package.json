@@ -24,13 +24,17 @@
   },
   "dependencies": {
     "autoprefixer-stylus": "^0.14.0",
+    "babel-polyfill": "^6.26.0",
     "browser-sync": "^2.18.13",
     "cross-env": "^5.0.1",
+    "eslint": "^4.7.0",
+    "fs-extra": "^4.0.2",
     "glob": "^7.1.2",
     "imagemin": "^5.3.1",
     "imagemin-jpegtran": "^5.0.2",
     "imagemin-pngquant": "^5.0.1",
     "imagemin-svgo": "^5.2.2",
+    "js-yaml": "^3.10.0",
     "npm-run-all": "^4.0.2",
     "pug": "^2.0.0-rc.4",
     "shelljs": "^0.7.8",
@@ -41,5 +45,11 @@
     "typescript": "^2.5.2",
     "webpack": "^3.4.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1"
+  }
 }

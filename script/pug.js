@@ -2,7 +2,7 @@ const pug = require('pug')
 const glob = require('glob')
 const path = require('path')
 const fs = require('fs')
-const shell = require('shelljs')
+// const shell = require('shelljs')
 const url = require('url')
 
 const docRoot = require('./config').docroot
@@ -19,7 +19,7 @@ const renderPug = async filename => {
 
   const distPath = path.resolve(dist, path.relative(docRoot, filename))
 
-  shell.mkdir('-p', path.dirname(distPath))
+  fs.ensureDirSync(path.dirname(distPath))
 
   const htmlFileName = distPath.replace(/\.pug$/, '.html')
 

@@ -1,9 +1,9 @@
 const stylus = require('stylus')
 const autoprefixer = require('autoprefixer-stylus')
-const fs = require('fs')
+const fs = require('fs-extra')
 const path = require('path')
 const glob = require('glob')
-const shell = require('shelljs')
+// const shell = require('shelljs')
 const url = require('url')
 
 const src = require('./config').src
@@ -46,7 +46,8 @@ const compile = filename => {
 function writeFile (filename, string) {
   const distPath = path.resolve(dist, path.relative(docRoot, filename))
 
-  shell.mkdir('-p', path.dirname(distPath))
+  // shell.mkdir('-p', path.dirname(distPath))
+  fs.ensureDirSync(path.dirname(distPath))
 
   const cssFileName = distPath.replace(/\.styl$/, '.css')
 
