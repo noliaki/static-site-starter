@@ -1,7 +1,6 @@
 const fs = require('fs-extra')
 const path = require('path')
 const glob = require('glob')
-// const shell = require('shelljs')
 const docRoot = require('./config').docroot
 const distPath = require('./config').dist
 

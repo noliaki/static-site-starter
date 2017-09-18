@@ -2,7 +2,6 @@ const pug = require('pug')
 const glob = require('glob')
 const path = require('path')
 const fs = require('fs')
-// const shell = require('shelljs')
 const url = require('url')
 
 const docRoot = require('./config').docroot
@@ -16,7 +15,6 @@ const defaultOption = {
 
 const renderPug = async filename => {
   const html = await compile(filename)
-
   const distPath = path.resolve(dist, path.relative(docRoot, filename))
 
   fs.ensureDirSync(path.dirname(distPath))

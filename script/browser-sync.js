@@ -74,6 +74,11 @@ function validFile (filename) {
   return new Promise((resolve, reject) => {
     fs.stat(filename, (error, stats) => {
       if (error) {
+        if (error.code === 'ENOENT') {
+          console.log(error)
+          resolve(false)
+          return
+        }
         reject(error)
         return
       }
