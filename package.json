@@ -15,7 +15,7 @@
     "clean": "rm -fr $DIST_DIR",
     "start:build:production": "npm run webpack && node ./scripts/production.js",
     "start:build:dev": "npm run webpack & node ./scripts/dev.js",
-    "webpack": "webpack --config ./scripts/webpack.config.js"
+    "webpack": "webpack --config ./webpack.config.js"
   },
   "dependencies": {
     "autoprefixer-stylus": "^0.14.0",

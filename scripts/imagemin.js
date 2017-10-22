@@ -3,13 +3,11 @@ const glob = require('glob')
 const imagemin = require('imagemin')
 const imageminSvgo = require('imagemin-svgo')
 
-const docRoot = require('./config').docroot
-const dist = require('./config').dist
-
-const regexp = /\.(jpe?g|gif|png|svg)$/i
+const paths = require('./paths')
+const isImage = require('./util').isImage
 
 const compressImage = filename => {
-  const distPath = path.resolve(dist, path.relative(docRoot, path.dirname(filename)))
+  const distPath = path.resolve(paths.dist, path.relative(paths.docroot, path.dirname(filename)))
 
   imagemin([filename], distPath, {
     plugins: [
@@ -25,19 +23,15 @@ const compressImage = filename => {
     })
   })
 }
+exports.compressImage = compressImage
 
 const exec = () => {
-  const files = glob.sync(`${docRoot}/**/*`, {
+  const files = glob.sync(`${paths.docroot}/**/*.{jpg,jpeg,gif,png,svg}`, {
     nodir: true
-  })
+  }).filter(file => isImage.test(file))
 
-  files.filter(file => regexp.test(file)).forEach(file => {
+  files.forEach(file => {
     compressImage(file)
   })
 }
-
-module.exports = {
-  exec,
-  regexp,
-  compressImage
-}
+exports.exec = exec

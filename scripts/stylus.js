@@ -5,14 +5,12 @@ const path = require('path')
 const glob = require('glob')
 const url = require('url')
 
-const src = require('./config').src
-const dist = require('./config').dist
-const docRoot = require('./config').docroot
-
-const regexp = /\.styl$/
+const paths = require('./paths')
+const isStylus = require('./util').isStylus
 
 const browsers = [
-  'ie >= 6'
+  '> 1%',
+  'last 2 versions'
 ]
 
 const convertStylus = async filename => {
@@ -28,7 +26,7 @@ const compile = filename => {
 
   return new Promise((resolve, reject) => {
     stylus(str)
-      .include(`${src}/modules/stylus`)
+      .include(`${paths.src}/modules/stylus`)
       .use(autoprefixer({
         browsers
       }))
@@ -45,7 +43,7 @@ const compile = filename => {
 }
 
 function writeFile (filename, string) {
-  const distPath = path.resolve(dist, path.relative(docRoot, filename))
+  const distPath = path.resolve(paths.dist, path.relative(paths.docroot, filename))
   const cssFileName = distPath.replace(/\.styl$/, '.css')
 
   fs.ensureDirSync(path.dirname(distPath))
@@ -58,32 +56,29 @@ function writeFile (filename, string) {
 }
 
 const exec = () => {
-  const files = glob.sync(`${docRoot}/**/*.styl`)
+  const files = glob.sync(`${paths.docroot}/**/*.styl`).filter(file => isStylus.test(file))
 
   files.forEach(file => {
     convertStylus(file)
   })
 }
+exports.exec = exec
 
-// middleware for browsersync
-module.exports = {
-  exec,
-  regexp,
-  middleware: async (req, res, next) => {
-    const requestPath = url.parse(req.url).pathname
-    const filePath = path.join(docRoot, requestPath.replace(/\.css$/, '.styl'))
+async function middleware (req, res, next) {
+  const requestPath = url.parse(req.url).pathname
+  const filePath = path.join(paths.docroot, requestPath.replace(/\.css$/i, '.styl'))
 
-    if (!(/\.css$/.test(requestPath)) || !fs.pathExistsSync(filePath)) {
-      next()
-      return
-    }
-
-    console.log(`stylus compile: ${requestPath}`)
-
-    const css = await compile(filePath)
-
-    res.writeHead(200, {'Content-Type': 'text/css'})
-    res.end(css)
+  if (!(/\.css$/i.test(requestPath)) || !fs.pathExistsSync(filePath)) {
     next()
+    return
   }
+
+  console.log(`stylus compile: ${requestPath}`)
+
+  const css = await compile(filePath)
+
+  res.writeHead(200, {'Content-Type': 'text/css'})
+  res.end(css)
+  next()
 }
+exports.middleware = middleware

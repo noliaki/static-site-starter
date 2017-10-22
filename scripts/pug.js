@@ -5,20 +5,17 @@ const fs = require('fs-extra')
 const url = require('url')
 const HTMLHint = require('htmlhint').HTMLHint
 
-const docRoot = require('./config').docroot
-const src = require('./config').src
-const dist = require('./config').dist
-
-const regexp = /\.pug$/
+const paths = require('./paths')
+const isPug = require('./util').isPug
 
 const defaultOption = {
-  basedir: `${src}/modules/pug`,
+  basedir: `${paths.src}/modules/pug`,
   pretty: process.env.NODE_ENV !== 'production'
 }
 
 const renderPug = async filename => {
   const html = await compile(filename)
-  const distPath = path.resolve(dist, path.relative(docRoot, filename))
+  const distPath = path.resolve(paths.dist, path.relative(paths.docroot, filename))
 
   fs.ensureDirSync(path.dirname(distPath))
 
@@ -33,7 +30,7 @@ const renderPug = async filename => {
 
 const compile = filename => {
   const option = Object.assign(defaultOption, {
-    filePath: path.relative(docRoot, filename)
+    filePath: path.relative(paths.docroot, filename)
   })
 
   return new Promise((resolve, reject) => {
@@ -53,32 +50,29 @@ const compile = filename => {
 }
 
 const exec = () => {
-  const files = glob.sync(`${docRoot}/**/*.pug`)
+  const files = glob.sync(`${paths.docroot}/**/*.pug`).filter(file => isPug.test(file))
 
   files.forEach(file => {
     renderPug(file)
   })
 }
+exports.exec = exec
 
-// middleware for browsersync
-module.exports = {
-  exec,
-  regexp,
-  middleware: async (req, res, next) => {
-    const requestPath = url.parse(req.url).pathname
-    const filePath = path.join(docRoot, requestPath.replace(/\.html$/, '.pug'))
+async function middleware (req, res, next) {
+  const requestPath = url.parse(req.url).pathname
+  const filePath = path.join(paths.docroot, requestPath.replace(/\.html$/i, '.pug'))
 
-    if (!fs.pathExistsSync(filePath) || !(/\.html$/.test(requestPath))) {
-      next()
-      return
-    }
-
-    console.log(`pug compile: ${requestPath}`)
-
-    const html = await compile(filePath)
-
-    res.writeHead(200, {'Content-Type': 'text/html'})
-    res.end(html)
+  if (!(/\.html$/i.test(requestPath)) || !fs.pathExistsSync(filePath)) {
     next()
+    return
   }
+
+  console.log(`pug compile: ${requestPath}`)
+
+  const html = await compile(filePath)
+
+  res.writeHead(200, {'Content-Type': 'text/html'})
+  res.end(html)
+  next()
 }
+exports.middleware = middleware

@@ -6,21 +6,16 @@ const pugMiddleware = require('./pug').middleware
 const stylusMiddleware = require('./stylus').middleware
 const imageMin = require('./imagemin')
 const copyFile = require('./cp-files')
-const dist = require('./config').dist
-const src = require('./config').src
-const docRoot = require('./config').docroot
-
-const isPug = require('./pug').regexp
-const isStyl = require('./stylus').regexp
-const isImage = require('./imagemin').regexp
+const paths = require('./paths')
+const util = require('./util')
 
 const startPath = () => {
-  const files = glob.sync(`${docRoot}/**/*.pug`)
+  const files = glob.sync(`${paths.docroot}/**/*.pug`)
   const initFile = files.reduce((prev, value) => {
     return prev.length > value.length ? value : prev
   })
 
-  return `/${path.relative(docRoot, initFile).replace(/\.pug$/, '.html')}`
+  return `/${path.relative(paths.docroot, initFile).replace(/\.pug$/, '.html')}`
 }
 
 imageMin.exec()
@@ -28,11 +23,11 @@ copyFile.exec()
 
 bs.init({
   server: {
-    baseDir: dist,
+    baseDir: paths.dist,
     directory: true
   },
   startPath: startPath(),
-  files: dist,
+  files: paths.dist,
   ghostMode: false,
   logLevel: 'debug',
   middleware: [
@@ -44,7 +39,7 @@ bs.init({
   open: false
 })
 
-fs.watch(src, { recursive: true }, async (event, filename) => {
+fs.watch(paths.src, { recursive: true }, async (event, filename) => {
   console.log(event, filename)
 
   // ignore
@@ -53,7 +48,7 @@ fs.watch(src, { recursive: true }, async (event, filename) => {
     return
   }
 
-  const absolutePath = path.resolve(src, filename)
+  const absolutePath = path.resolve(paths.src, filename)
 
   if (!fs.pathExistsSync(absolutePath)) {
     console.log('not exist')
@@ -61,14 +56,14 @@ fs.watch(src, { recursive: true }, async (event, filename) => {
   }
 
   // pug or stylus
-  if (isPug.test(filename) || isStyl.test(filename)) {
-    console.log(path.relative(docRoot, filename))
+  if (util.isPug.test(filename) || util.isStylus.test(filename)) {
+    console.log(path.relative(paths.docroot, filename))
     bs.reload()
     return
   }
 
   // image file
-  if (isImage.test(filename)) {
+  if (util.isImage.test(filename)) {
     imageMin.compressImage(absolutePath)
     return
   }
@@ -77,5 +72,5 @@ fs.watch(src, { recursive: true }, async (event, filename) => {
 })
 
 function ignoreFile (filename) {
-  return /\.ts$/.test(filename) || /\/\./.test(filename)
+  return util.isTs.test(filename) || /\/\./.test(filename)
 }

@@ -6,31 +6,29 @@ const plugins = [
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
   })
 ]
-const docRoot = require('./config').docroot
-const distDir = require('./config').dist
-const srcDir = require('./config').src
+const paths = require('./scripts/paths')
 
 function entries () {
-  const files = glob.sync(`${docRoot}/**/*.ts`)
+  const files = glob.sync(`${paths.docroot}/**/*.ts`)
   const entriesObj = {}
   files.forEach(file => {
-    const filePath = `./${path.relative(docRoot, file)}`
-    entriesObj[filePath.replace(/\/ts\//gm, '/js/').replace(/\.ts$/, '')] = filePath
+    const filePath = `./${path.relative(paths.docroot, file)}`
+    entriesObj[filePath.replace(/\/ts\//g, '/js/').replace(/\.ts$/, '')] = filePath
   })
 
   return entriesObj
 }
 
 const config = {
-  context: docRoot,
+  context: paths.docroot,
   entry: entries(),
   output: {
-    path: distDir,
+    path: paths.dist,
     filename: '[name].js'
   },
   resolve: {
     alias: {
-      '@': `${srcDir}/modules/ts`
+      '@': `${paths.src}/modules/ts`
     },
     extensions: ['.js', '.ts']
   },
