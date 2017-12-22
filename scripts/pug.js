@@ -8,10 +8,11 @@ const HTMLHint = require('htmlhint').HTMLHint
 const paths = require('./paths')
 const isPug = require('./util').isPug
 
-const defaultOption = {
-  basedir: `${paths.src}/modules/pug`,
-  pretty: process.env.NODE_ENV !== 'production'
-}
+const config = require('../config').pug
+
+const defaultOption = Object.assign(config, {
+  basedir: path.resolve(config.basedir)
+})
 
 const renderPug = async filename => {
   const html = await compile(filename)

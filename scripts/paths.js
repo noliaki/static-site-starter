@@ -1,7 +1,8 @@
 const path = require('path')
+const config = require('../config')
 
 module.exports = {
-  src: path.resolve(`${__dirname}/../src`),
-  dist: path.resolve(process.env.DIST_DIR || `${__dirname}/../dist-dev`),
-  docroot: path.resolve(`${__dirname}/../src/docroot`)
+  src: path.resolve(config.src),
+  dist: path.resolve(config.dist),
+  docroot: path.resolve(config.docroot)
 }

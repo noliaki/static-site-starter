@@ -8,10 +8,7 @@ const url = require('url')
 const paths = require('./paths')
 const isStylus = require('./util').isStylus
 
-const browsers = [
-  '> 1%',
-  'last 2 versions'
-]
+const config = require('../config')
 
 const convertStylus = async filename => {
   const css = await compile(filename)
@@ -26,11 +23,11 @@ const compile = filename => {
 
   return new Promise((resolve, reject) => {
     stylus(str)
-      .include(`${paths.src}/modules/stylus`)
+      .include(path.resolve(config.stylus.include))
       .use(autoprefixer({
-        browsers
+        browsers: config.browsers
       }))
-      .set('compress', process.env.NODE_ENV === 'production')
+      .set('compress', config.stylus.compress)
       .render((error, output) => {
         if (error) {
           reject(error)
