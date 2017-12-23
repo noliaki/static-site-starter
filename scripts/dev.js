@@ -1,6 +1,5 @@
 const fs = require('fs-extra')
 const path = require('path')
-const glob = require('glob')
 const bs = require('browser-sync').create()
 const pugMiddleware = require('./pug').middleware
 const stylusMiddleware = require('./stylus').middleware
@@ -8,36 +7,17 @@ const imageMin = require('./imagemin')
 const copyFile = require('./cp-files')
 const paths = require('./paths')
 const util = require('./util')
-
-const startPath = () => {
-  const files = glob.sync(`${paths.docroot}/**/*.{pug, html}`)
-  const initFile = files.reduce((prev, value) => {
-    return prev.length > value.length ? value : prev
-  })
-
-  return `/${path.relative(paths.docroot, initFile).replace(/\.pug$/, '.html')}`
-}
+const config = require('../config').browsersync
 
 imageMin.exec()
 copyFile.exec()
 
-bs.init({
-  server: {
-    baseDir: paths.dist,
-    directory: true
-  },
-  startPath: startPath(),
-  files: paths.dist,
-  ghostMode: false,
-  logLevel: 'debug',
+bs.init(Object.assign(config, {
   middleware: [
     pugMiddleware,
     stylusMiddleware
-  ],
-  reloadDebounce: 500,
-  ui: false,
-  open: false
-})
+  ]
+}))
 
 fs.watch(paths.src, { recursive: true }, (event, filename) => {
   console.log(event, filename)
