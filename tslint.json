@@ -5,6 +5,7 @@
   ],
   "jsRules": {},
   "rules": {
+    "quotemark": [true, "single", "avoid-escape"],
     "no-unused-variable": true,
     "no-unused-expression": true,
     "one-variable-per-declaration": [true, "ignore-for-loop"]
