@@ -1,5 +1,6 @@
 const stylus = require('stylus')
-const autoprefixer = require('autoprefixer-stylus')
+const postcss = require('postcss')
+const autoprefixer = require('autoprefixer')
 const fs = require('fs-extra')
 const path = require('path')
 const glob = require('glob')
@@ -8,7 +9,6 @@ const url = require('url')
 const paths = require('./paths')
 const isStylus = require('./util').isStylus
 
-const browsers = require('../config').browsers
 const option = require('../config').stylus
 
 const convertStylus = async filename => {
@@ -17,7 +17,18 @@ const convertStylus = async filename => {
   writeFile(filename, css)
 }
 
-const compile = filename => {
+async function compile (filename) {
+  const css = await stylusToCss(filename)
+  const result = await addPrefix(css)
+
+  result.warnings().forEach(warn => {
+    console.warn(warn.toString())
+  })
+
+  return result.css
+}
+
+function stylusToCss (filename) {
   const str = fs.readFileSync(filename, {
     encoding: 'utf8'
   })
@@ -25,10 +36,7 @@ const compile = filename => {
   return new Promise((resolve, reject) => {
     stylus(str)
       .include(path.resolve(option.include))
-      .use(autoprefixer({
-        browsers
-      }))
-      .set('compress', option.compress)
+      .set('compress', option.compress || process.env.NODE_ENV === 'production')
       .render((error, output) => {
         if (error) {
           reject(error)
@@ -51,6 +59,12 @@ function writeFile (filename, string) {
 
     console.log(`CREATED stylus -> css: ${cssFileName}`)
   })
+}
+
+function addPrefix (css) {
+  return postcss([
+    autoprefixer(option.autoprefixerOption)
+  ]).process(css)
 }
 
 const exec = () => {
