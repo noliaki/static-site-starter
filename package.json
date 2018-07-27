@@ -24,7 +24,6 @@
   ],
   "dependencies": {
     "autoprefixer": "^9.0.1",
-    "autoprefixer-stylus": "^0.14.0",
     "babel-polyfill": "^6.26.0",
     "browser-sync": "^2.24.4",
     "cross-env": "^5.1.6",
