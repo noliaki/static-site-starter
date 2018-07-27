@@ -2,17 +2,15 @@
   "src": "src",
   "dist": "dist",
   "docroot": "src/docroot",
-  "browsers": [
-    "> 1%",
-    "last 2 versions"
-  ],
   "pug": {
     "basedir": "src/modules/pug",
     "pretty": true
   },
   "stylus": {
-    "compress": true,
-    "include": "src/modules/stylus"
+    "include": "src/modules/stylus",
+    "autoprefixerOption": {
+      "grid": true
+    }
   },
   "imagemin": {
     "jpegtran": {},

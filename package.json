@@ -17,7 +17,13 @@
     "start:build:dev": "npm run webpack & node ./scripts/dev.js",
     "webpack": "webpack --config ./webpack.config.js"
   },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "ie >= 11"
+  ],
   "dependencies": {
+    "autoprefixer": "^9.0.1",
     "autoprefixer-stylus": "^0.14.0",
     "babel-polyfill": "^6.26.0",
     "browser-sync": "^2.24.4",
@@ -32,6 +38,7 @@
     "imagemin-svgo": "^7.0.0",
     "js-yaml": "^3.11.0",
     "npm-run-all": "^4.1.3",
+    "postcss": "^7.0.1",
     "pug": "^2.0.3",
     "rimraf": "^2.6.2",
     "stylus": "^0.54.5",
