@@ -8,8 +8,11 @@
       "es2015",
       "es2015.promise"
     ],
-    "module": "es2015",
+    "module": "commonjs",
     "moduleResolution": "node",
     "target": "es5"
-  }
+  },
+  "include": [
+    "src"
+  ]
 }

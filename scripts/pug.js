@@ -4,19 +4,19 @@ const path = require('path')
 const fs = require('fs-extra')
 const url = require('url')
 const HTMLHint = require('htmlhint').HTMLHint
-
-const paths = require('./paths')
 const isPug = require('./util').isPug
+const config = require('../config')
 
-const config = require('../config').pug
-
-const defaultOption = Object.assign(config, {
+const defaultOption = Object.assign(config.pug, {
   basedir: path.resolve(config.basedir)
 })
 
 const renderPug = async filename => {
   const html = await compile(filename)
-  const distPath = path.resolve(paths.dist, path.relative(paths.docroot, filename))
+  const distPath = path.resolve(
+    config.dist,
+    path.relative(config.docroot, filename)
+  )
 
   fs.ensureDirSync(path.dirname(distPath))
 
@@ -31,7 +31,7 @@ const renderPug = async filename => {
 
 const compile = filename => {
   const option = Object.assign(defaultOption, {
-    filePath: path.relative(paths.docroot, filename)
+    filePath: path.relative(config.docroot, filename)
   })
 
   return new Promise((resolve, reject) => {
@@ -51,7 +51,9 @@ const compile = filename => {
 }
 
 const exec = () => {
-  const files = glob.sync(`${paths.docroot}/**/*.pug`).filter(file => isPug.test(file))
+  const files = glob
+    .sync(`${config.docroot}/**/*.pug`)
+    .filter(file => isPug.test(file))
 
   files.forEach(file => {
     renderPug(file)
@@ -59,11 +61,14 @@ const exec = () => {
 }
 exports.exec = exec
 
-async function middleware (req, res, next) {
+async function middleware(req, res, next) {
   const requestPath = url.parse(req.url).pathname
-  const filePath = path.join(paths.docroot, requestPath.replace(/\.html$/i, '.pug'))
+  const filePath = path.join(
+    config.docroot,
+    requestPath.replace(/\.html$/i, '.pug')
+  )
 
-  if (!(/\.html$/i.test(requestPath)) || !fs.pathExistsSync(filePath)) {
+  if (!/\.html$/i.test(requestPath) || !fs.pathExistsSync(filePath)) {
     next()
     return
   }
@@ -72,7 +77,7 @@ async function middleware (req, res, next) {
 
   const html = await compile(filePath)
 
-  res.writeHead(200, {'Content-Type': 'text/html'})
+  res.writeHead(200, { 'Content-Type': 'text/html' })
   res.end(html)
 }
 exports.middleware = middleware

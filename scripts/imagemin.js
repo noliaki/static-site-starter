@@ -5,19 +5,18 @@ const imageminJpegtran = require('imagemin-jpegtran')
 const imageminPngquant = require('imagemin-pngquant')
 const imageminSvgo = require('imagemin-svgo')
 
-const paths = require('./paths')
-const config = require('../config').imagemin
+const config = require('../config')
 const imageExt = '*.{jpg,jpeg,gif,png,svg}'
 
-const compressImage = filename => {
-  const relPath = path.relative(paths.docroot, path.dirname(filename))
-  const distPath = path.resolve(paths.dist, relPath)
+const compressImage = (dirname, filename) => {
+  const relPath = path.relative(config.docroot, dirname)
+  const distPath = path.resolve(config.dist, relPath)
 
-  imagemin([filename], distPath, {
+  imagemin([filename || `${dirname}${imageExt}`], distPath, {
     plugins: [
-      imageminJpegtran(config.jpegtran),
-      imageminPngquant(config.pngquant),
-      imageminSvgo(config.svgo)
+      imageminJpegtran(config.imagemin.jpegtran),
+      imageminPngquant(config.imagemin.pngquant),
+      imageminSvgo(config.imagemin.svgo)
     ]
   }).then(files => {
     files.forEach(file => {
@@ -28,9 +27,13 @@ const compressImage = filename => {
 exports.compressImage = compressImage
 
 const exec = () => {
-  const files = glob.sync(`${paths.docroot}/**/${imageExt}`, {
-    nodir: true
-  })
+  const files = glob
+    .sync(
+      [`${config.docroot}/**/${imageExt}`, `${config.docroot}/${imageExt}`],
+      {
+        nodir: true
+      }
+    )
     .map(filename => path.dirname(filename))
     .filter((dirname, index, filesArr) => filesArr.indexOf(dirname) === index)
 
