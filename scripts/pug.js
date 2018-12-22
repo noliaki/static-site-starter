@@ -1,5 +1,5 @@
 const pug = require('pug')
-const glob = require('glob')
+const glob = require('fast-glob')
 const path = require('path')
 const fs = require('fs-extra')
 const url = require('url')
@@ -7,11 +7,9 @@ const HTMLHint = require('htmlhint').HTMLHint
 const isPug = require('./util').isPug
 const config = require('../config')
 
-const defaultOption = Object.assign(config.pug, {
-  basedir: path.resolve(config.basedir)
-})
+const defaultOption = Object.assign({}, config.pug)
 
-const renderPug = async filename => {
+async function render(filename) {
   const html = await compile(filename)
   const distPath = path.resolve(
     config.dist,
@@ -29,8 +27,8 @@ const renderPug = async filename => {
   })
 }
 
-const compile = filename => {
-  const option = Object.assign(defaultOption, {
+function compile(filename) {
+  const option = Object.assign({}, defaultOption, {
     filePath: path.relative(config.docroot, filename)
   })
 
@@ -50,16 +48,15 @@ const compile = filename => {
   })
 }
 
-const exec = () => {
+function renderAll() {
   const files = glob
     .sync(`${config.docroot}/**/*.pug`)
     .filter(file => isPug.test(file))
 
   files.forEach(file => {
-    renderPug(file)
+    render(file)
   })
 }
-exports.exec = exec
 
 async function middleware(req, res, next) {
   const requestPath = url.parse(req.url).pathname
@@ -80,4 +77,8 @@ async function middleware(req, res, next) {
   res.writeHead(200, { 'Content-Type': 'text/html' })
   res.end(html)
 }
-exports.middleware = middleware
+
+module.exports = {
+  renderAll,
+  middleware
+}

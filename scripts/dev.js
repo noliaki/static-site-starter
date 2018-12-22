@@ -8,8 +8,8 @@ const copyFile = require('./cp-files')
 const util = require('./util')
 const config = require('../config')
 
-imageMin.exec()
-copyFile.exec()
+imageMin.compressAll()
+copyFile.copyAll()
 
 bs.init(
   Object.assign(config.browsersync, {

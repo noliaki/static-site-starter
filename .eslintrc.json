@@ -1,5 +1,5 @@
 {
-  "extends": "standard",
+  "extends": ["@noliaki/eslint-config-prettier"],
   "env": {
     "es6": true,
     "browser": true

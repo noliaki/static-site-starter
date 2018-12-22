@@ -1,10 +1,10 @@
 const fs = require('fs-extra')
-const glob = require('glob')
+const glob = require('fast-glob')
 const path = require('path')
 const util = require('./util')
 const config = require('../config')
 
-const copy = filename => {
+function copy(filename) {
   if (!util.shouldCopy(filename)) {
     return
   }
@@ -22,7 +22,7 @@ const copy = filename => {
   })
 }
 
-const exec = () => {
+function copyAll() {
   const files = glob
     .sync([`${config.docroot}/**/*`, `${config.docroot}/*`], {
       nocase: true,
@@ -36,6 +36,6 @@ const exec = () => {
 }
 
 module.exports = {
-  exec,
-  copy
+  copy,
+  copyAll
 }

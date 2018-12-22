@@ -3,12 +3,12 @@ const postcss = require('postcss')
 const autoprefixer = require('autoprefixer')
 const fs = require('fs-extra')
 const path = require('path')
-const glob = require('glob')
+const glob = require('fast-glob')
 const url = require('url')
 const isStylus = require('./util').isStylus
 const config = require('../config')
 
-const convertStylus = async filename => {
+async function render(filename) {
   const css = await compile(filename)
 
   writeFile(filename, css)
@@ -31,20 +31,23 @@ function stylusToCss(filename) {
   })
 
   return new Promise((resolve, reject) => {
-    stylus(str)
-      .include(path.resolve(config.stylus.include))
-      .set(
-        'compress',
-        config.stylus.compress || process.env.NODE_ENV === 'production'
-      )
-      .render((error, output) => {
-        if (error) {
-          reject(error)
-          throw error
-        }
+    const renderer = stylus(str).set(
+      'compress',
+      config.stylus.compress || process.env.NODE_ENV === 'production'
+    )
 
-        resolve(output)
-      })
+    config.stylus.includes.forEach(path => {
+      renderer.include(path)
+    })
+
+    renderer.render((error, output) => {
+      if (error) {
+        reject(error)
+        throw error
+      }
+
+      resolve(output)
+    })
   })
 }
 
@@ -65,21 +68,18 @@ function writeFile(filename, string) {
 }
 
 function addPrefix(css) {
-  return postcss([
-    autoprefixer(config.stylus.autoprefixerconfig.stylus)
-  ]).process(css)
+  return postcss([autoprefixer(config.stylus.autoprefixerconfig)]).process(css)
 }
 
-const exec = () => {
+function renderAll() {
   const files = glob
-    .sync(`${config.docroot}/**/*.styl`)
+    .sync([`${config.docroot}/**/*.styl`, `${config.docroot}/*.styl`])
     .filter(file => isStylus.test(file))
 
   files.forEach(file => {
-    convertStylus(file)
+    render(file)
   })
 }
-exports.exec = exec
 
 async function middleware(req, res, next) {
   const requestPath = url.parse(req.url).pathname
@@ -100,4 +100,8 @@ async function middleware(req, res, next) {
   res.writeHead(200, { 'Content-Type': 'text/css' })
   res.end(css)
 }
-exports.middleware = middleware
+
+module.exports = {
+  renderAll,
+  middleware
+}

@@ -1,5 +1,5 @@
 const path = require('path')
-const glob = require('glob')
+const glob = require('fast-glob')
 const imagemin = require('imagemin')
 const imageminJpegtran = require('imagemin-jpegtran')
 const imageminPngquant = require('imagemin-pngquant')
@@ -8,7 +8,7 @@ const imageminSvgo = require('imagemin-svgo')
 const config = require('../config')
 const imageExt = '*.{jpg,jpeg,gif,png,svg}'
 
-const compressImage = (dirname, filename) => {
+function compress(dirname, filename) {
   const relPath = path.relative(config.docroot, dirname)
   const distPath = path.resolve(config.dist, relPath)
 
@@ -24,9 +24,8 @@ const compressImage = (dirname, filename) => {
     })
   })
 }
-exports.compressImage = compressImage
 
-const exec = () => {
+function compressAll() {
   const files = glob
     .sync(
       [`${config.docroot}/**/${imageExt}`, `${config.docroot}/${imageExt}`],
@@ -38,7 +37,11 @@ const exec = () => {
     .filter((dirname, index, filesArr) => filesArr.indexOf(dirname) === index)
 
   files.forEach(file => {
-    compressImage(path.resolve(file, imageExt))
+    compress(path.resolve(file, imageExt))
   })
 }
-exports.exec = exec
+
+module.exports = {
+  compress,
+  compressAll
+}
