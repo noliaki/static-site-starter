@@ -2,7 +2,6 @@ const pug = require('pug')
 const glob = require('fast-glob')
 const path = require('path')
 const fs = require('fs-extra')
-const url = require('url')
 const HTMLHint = require('htmlhint').HTMLHint
 const isPug = require('./util').isPug
 const config = require('../config')
@@ -59,7 +58,7 @@ function renderAll() {
 }
 
 async function middleware(req, res, next) {
-  const requestPath = url.parse(req.url).pathname
+  const requestPath = req._parsedUrl.pathname
   const filePath = path.join(
     config.docroot,
     requestPath.replace(/\.html$/i, '.pug')

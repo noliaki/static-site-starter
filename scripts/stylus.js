@@ -4,7 +4,6 @@ const autoprefixer = require('autoprefixer')
 const fs = require('fs-extra')
 const path = require('path')
 const glob = require('fast-glob')
-const url = require('url')
 const isStylus = require('./util').isStylus
 const config = require('../config')
 
@@ -68,7 +67,12 @@ function writeFile(filename, string) {
 }
 
 function addPrefix(css) {
-  return postcss([autoprefixer(config.stylus.autoprefixerconfig)]).process(css)
+  return postcss([autoprefixer(config.stylus.autoprefixerconfig)]).process(
+    css,
+    {
+      from: undefined
+    }
+  )
 }
 
 function renderAll() {
@@ -82,7 +86,7 @@ function renderAll() {
 }
 
 async function middleware(req, res, next) {
-  const requestPath = url.parse(req.url).pathname
+  const requestPath = req._parsedUrl.pathname
   const filePath = path.join(
     config.docroot,
     requestPath.replace(/\.css$/i, '.styl')

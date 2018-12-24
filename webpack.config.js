@@ -1,7 +1,7 @@
 const webpack = require('webpack')
 const path = require('path')
 const glob = require('glob')
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
 const plugins = [
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
@@ -48,8 +48,8 @@ const webpackConfig = {
   plugins,
   optimization: {
     minimizer: [
-      new UglifyJSPlugin({
-        uglifyOptions: {
+      new TerserPlugin({
+        terserOptions: {
           compress: {
             drop_console: process.env.NODE_ENV === 'production'
           }
