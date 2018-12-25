@@ -10,6 +10,9 @@ append variables
   -
     const TITLE       = 'AWESOME TITLE'
     const DESCRIPTION = 'AWESOME DESCRIPTION'
+    const ldJson = {
+      hoge: 'hoge'
+    }
 
 //- ------------------------------------
 //- style this page
@@ -36,3 +39,5 @@ block content
     br
     = URL
     | hoge
+
+  script(type="application/ld+json")!= JSON.stringify(ldJson)
