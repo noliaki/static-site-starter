@@ -5,21 +5,19 @@ const pugMiddleware = require('./pug').middleware
 const stylusMiddleware = require('./stylus').middleware
 const imageMin = require('./imagemin')
 const copyFile = require('./cp-files')
-const paths = require('./paths')
 const util = require('./util')
-const config = require('../config').browsersync
+const config = require('../config')
 
-imageMin.exec()
-copyFile.exec()
+imageMin.compressAll()
+copyFile.copyAll()
 
-bs.init(Object.assign(config, {
-  middleware: [
-    pugMiddleware,
-    stylusMiddleware
-  ]
-}))
+bs.init(
+  Object.assign(config.browsersync, {
+    middleware: [pugMiddleware, stylusMiddleware]
+  })
+)
 
-fs.watch(paths.src, { recursive: true }, (event, filename) => {
+fs.watch(config.src, { recursive: true }, (event, filename) => {
   console.log(event, filename)
 
   // ignore
@@ -28,7 +26,7 @@ fs.watch(paths.src, { recursive: true }, (event, filename) => {
     return
   }
 
-  const absolutePath = path.resolve(paths.src, filename)
+  const absolutePath = path.resolve(config.src, filename)
 
   if (!fs.pathExistsSync(absolutePath)) {
     console.log('not exist')
@@ -37,14 +35,14 @@ fs.watch(paths.src, { recursive: true }, (event, filename) => {
 
   // pug
   if (util.isPug.test(filename)) {
-    console.log(path.relative(paths.docroot, filename))
+    console.log(path.relative(config.docroot, filename))
     bs.reload('*.html')
     return
   }
 
   // stylus
   if (util.isStylus.test(filename)) {
-    console.log(path.relative(paths.docroot, filename))
+    console.log(path.relative(config.docroot, filename))
     bs.reload('*.css')
     return
   }
@@ -62,6 +60,6 @@ fs.watch(paths.src, { recursive: true }, (event, filename) => {
   copyFile.copy(absolutePath)
 })
 
-function ignoreFile (filename) {
+function ignoreFile(filename) {
   return util.isTs.test(filename) || /\/\./.test(filename)
 }

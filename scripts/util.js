@@ -11,5 +11,10 @@ const isTs = /\.ts$/
 exports.isTs = isTs
 
 exports.shouldCopy = filename => {
-  return !(isPug.test(filename) || isStylus.test(filename) || isImage.test(filename) || isTs.test(filename))
+  return !(
+    isPug.test(filename) ||
+    isStylus.test(filename) ||
+    isImage.test(filename) ||
+    isTs.test(filename)
+  )
 }

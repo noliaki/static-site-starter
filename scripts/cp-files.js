@@ -1,16 +1,18 @@
 const fs = require('fs-extra')
+const glob = require('fast-glob')
 const path = require('path')
-const glob = require('glob')
-
-const paths = require('./paths')
 const util = require('./util')
+const config = require('../config')
 
-const copy = filename => {
+function copy(filename) {
   if (!util.shouldCopy(filename)) {
     return
   }
 
-  const distFile = path.resolve(paths.dist, path.relative(paths.docroot, filename))
+  const distFile = path.resolve(
+    config.dist,
+    path.relative(config.docroot, filename)
+  )
 
   fs.ensureDirSync(path.dirname(distFile))
   fs.copyFile(filename, distFile, error => {
@@ -20,11 +22,13 @@ const copy = filename => {
   })
 }
 
-const exec = () => {
-  const files = glob.sync(`${paths.docroot}/**/*`, {
-    nocase: true,
-    nodir: true
-  }).filter(file => util.shouldCopy(file))
+function copyAll() {
+  const files = glob
+    .sync([`${config.docroot}/**/*`, `${config.docroot}/*`], {
+      nocase: true,
+      nodir: true
+    })
+    .filter(file => util.shouldCopy(file))
 
   files.forEach(file => {
     copy(file)
@@ -32,6 +36,6 @@ const exec = () => {
 }
 
 module.exports = {
-  exec,
-  copy
+  copy,
+  copyAll
 }

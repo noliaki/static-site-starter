@@ -1,8 +1,8 @@
 const rimraf = require('rimraf')
-const paths = require('./paths')
+const distDir = require('../config').dist
 
-rimraf(paths.dist, (err) => {
+rimraf(distDir, err => {
   if (err) throw new Error(err)
 
-  console.log(`[Done remove] ${paths.dist}`)
+  console.log(`[Done remove] ${distDir}`)
 })

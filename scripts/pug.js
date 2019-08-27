@@ -1,22 +1,19 @@
 const pug = require('pug')
-const glob = require('glob')
+const glob = require('fast-glob')
 const path = require('path')
 const fs = require('fs-extra')
-const url = require('url')
-const HTMLHint = require('htmlhint').HTMLHint
-
-const paths = require('./paths')
+// const HTMLHint = require('htmlhint').HTMLHint
 const isPug = require('./util').isPug
+const config = require('../config')
 
-const config = require('../config').pug
+const defaultOption = Object.assign({}, config.pug)
 
-const defaultOption = Object.assign(config, {
-  basedir: path.resolve(config.basedir)
-})
-
-const renderPug = async filename => {
+async function render(filename) {
   const html = await compile(filename)
-  const distPath = path.resolve(paths.dist, path.relative(paths.docroot, filename))
+  const distPath = path.resolve(
+    config.dist,
+    path.relative(config.docroot, filename)
+  )
 
   fs.ensureDirSync(path.dirname(distPath))
 
@@ -29,9 +26,9 @@ const renderPug = async filename => {
   })
 }
 
-const compile = filename => {
-  const option = Object.assign(defaultOption, {
-    filePath: path.relative(paths.docroot, filename)
+function compile(filename) {
+  const option = Object.assign({}, defaultOption, {
+    filePath: path.relative(config.docroot, filename)
   })
 
   return new Promise((resolve, reject) => {
@@ -43,27 +40,31 @@ const compile = filename => {
 
       console.log('-----------------------------------')
       console.log(`////// ${filename} //////`)
-      console.log(HTMLHint.verify(html))
+      // console.log(HTMLHint.verify(html))
       console.log('-----------------------------------')
       resolve(html)
     })
   })
 }
 
-const exec = () => {
-  const files = glob.sync(`${paths.docroot}/**/*.pug`).filter(file => isPug.test(file))
+function renderAll() {
+  const files = glob
+    .sync(`${config.docroot}/**/*.pug`)
+    .filter(file => isPug.test(file))
 
   files.forEach(file => {
-    renderPug(file)
+    render(file)
   })
 }
-exports.exec = exec
 
-async function middleware (req, res, next) {
-  const requestPath = url.parse(req.url).pathname
-  const filePath = path.join(paths.docroot, requestPath.replace(/\.html$/i, '.pug'))
+async function middleware(req, res, next) {
+  const requestPath = req._parsedUrl.pathname
+  const filePath = path.join(
+    config.docroot,
+    requestPath.replace(/\.html$/i, '.pug')
+  )
 
-  if (!(/\.html$/i.test(requestPath)) || !fs.pathExistsSync(filePath)) {
+  if (!/\.html$/i.test(requestPath) || !fs.pathExistsSync(filePath)) {
     next()
     return
   }
@@ -72,7 +73,11 @@ async function middleware (req, res, next) {
 
   const html = await compile(filePath)
 
-  res.writeHead(200, {'Content-Type': 'text/html'})
+  res.writeHead(200, { 'Content-Type': 'text/html' })
   res.end(html)
 }
-exports.middleware = middleware
+
+module.exports = {
+  renderAll,
+  middleware
+}

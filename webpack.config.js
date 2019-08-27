@@ -1,36 +1,38 @@
 const webpack = require('webpack')
 const path = require('path')
 const glob = require('glob')
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
 const plugins = [
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
   })
 ]
-const paths = require('./scripts/paths')
 
-function entries () {
-  const files = glob.sync(`${paths.docroot}/**/*.ts`)
+const config = require('./config')
+
+function entries() {
+  const files = glob.sync(`${config.docroot}/**/*.ts`)
   const entriesObj = {}
   files.forEach(file => {
-    const filePath = `./${path.relative(paths.docroot, file)}`
-    entriesObj[filePath.replace(/\/ts\//g, '/js/').replace(/\.ts$/, '')] = filePath
+    const filePath = `./${path.relative(config.docroot, file)}`
+    const key = filePath.replace(/\/ts\//g, '/js/').replace(/\.ts$/, '')
+    entriesObj[key] = filePath
   })
 
   return entriesObj
 }
 
-const config = {
+const webpackConfig = {
   mode: process.env.NODE_ENV,
-  context: paths.docroot,
+  context: config.docroot,
   entry: entries(),
   output: {
-    path: paths.dist,
+    path: config.dist,
     filename: '[name].js'
   },
   resolve: {
     alias: {
-      '@': `${paths.src}/modules/ts`
+      '@': `${config.src}/modules/ts`
     },
     extensions: ['.js', '.ts']
   },
@@ -46,8 +48,8 @@ const config = {
   plugins,
   optimization: {
     minimizer: [
-      new UglifyJSPlugin({
-        uglifyOptions: {
+      new TerserPlugin({
+        terserOptions: {
           compress: {
             drop_console: process.env.NODE_ENV === 'production'
           }
@@ -58,13 +60,13 @@ const config = {
 }
 
 if (process.env.NODE_ENV === 'development') {
-  config.watch = true
-  config.cache = true
-  config.plugins = plugins.concat([
+  webpackConfig.watch = true
+  webpackConfig.cache = true
+  webpackConfig.plugins = plugins.concat([
     new webpack.LoaderOptionsPlugin({
       debug: true
     })
   ])
 }
 
-module.exports = config
+module.exports = webpackConfig
