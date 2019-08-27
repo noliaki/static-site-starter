@@ -6,13 +6,10 @@ extends /layouts/default
 //- ------------------------------------
 //- variables this page
 //-
-append variables
-  -
-    const TITLE       = 'AWESOME TITLE'
-    const DESCRIPTION = 'AWESOME DESCRIPTION'
-    const ldJson = {
-      hoge: 'hoge'
-    }
+block append variables
+  - const TITLE = 'AWESOME TITLE'
+  - const DESCRIPTION = 'AWESOME DESCRIPTION'
+  - const ldJson = { hoge: 'hoge' }
 
 //- ------------------------------------
 //- style this page
@@ -28,7 +25,6 @@ block scripts
   //- example
   script(src='js/index.js')
 
-
 //- ------------------------------------
 //- content this page
 //-
@@ -40,4 +36,4 @@ block content
     = URL
     | hoge
 
-  script(type="application/ld+json")!= JSON.stringify(ldJson)
+  script(type='application/ld+json')= JSON.stringify(ldJson)

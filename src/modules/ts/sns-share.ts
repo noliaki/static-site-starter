@@ -1,4 +1,4 @@
-function onClick(event) {
+export default function onClick(event) {
   event.preventDefault()
 
   const href = event.currentTarget.getAttribute('href')

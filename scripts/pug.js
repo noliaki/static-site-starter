@@ -2,7 +2,7 @@ const pug = require('pug')
 const glob = require('fast-glob')
 const path = require('path')
 const fs = require('fs-extra')
-const HTMLHint = require('htmlhint').HTMLHint
+// const HTMLHint = require('htmlhint').HTMLHint
 const isPug = require('./util').isPug
 const config = require('../config')
 
@@ -40,7 +40,7 @@ function compile(filename) {
 
       console.log('-----------------------------------')
       console.log(`////// ${filename} //////`)
-      console.log(HTMLHint.verify(html))
+      // console.log(HTMLHint.verify(html))
       console.log('-----------------------------------')
       resolve(html)
     })
