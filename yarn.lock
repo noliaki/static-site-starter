@@ -5488,6 +5488,15 @@ postcss@^7.0.17:
     source-map "^0.6.1"
     supports-color "^6.1.0"
 
+postcss@^7.0.19:
+  version "7.0.19"
+  resolved "https://registry.yarnpkg.com/postcss/-/postcss-7.0.19.tgz#a59e1c8fdad9f6b31fb192937361cbae1562399e"
+  integrity sha512-0InetJoW1WQMoiJ3E5oF1m37ZAJX0d0XLgR50bVXCC4cF8HCYRpT6hH2nNYHVCV7QAx1hWj81/2CRT0elHAy5g==
+  dependencies:
+    chalk "^2.4.2"
+    source-map "^0.6.1"
+    supports-color "^6.1.0"
+
 prelude-ls@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.1.2.tgz#21932a549f5e52ffd9a827f570e04be62a97da54"
