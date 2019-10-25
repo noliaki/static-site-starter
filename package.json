@@ -37,7 +37,7 @@
     "autoprefixer": "^9.6.1",
     "browser-sync": "^2.26.7",
     "cross-env": "^5.1.6",
-    "eslint": "^6.2.2",
+    "eslint": "^6.6.0",
     "fast-glob": "^3.0.4",
     "fs-extra": "^8.1.0",
     "htmlhint": "^0.11.0",
