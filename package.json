@@ -33,7 +33,7 @@
   "dependencies": {
     "@noliaki/eslint-config-prettier": "^0.1.0",
     "@noliaki/prettier-config": "^0.0.1",
-    "@types/lodash": "^4.14.137",
+    "@types/lodash": "^4.14.145",
     "autoprefixer": "^9.6.1",
     "browser-sync": "^2.26.7",
     "cross-env": "^5.1.6",
