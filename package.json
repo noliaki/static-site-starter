@@ -34,7 +34,7 @@
     "@noliaki/eslint-config-prettier": "^0.2.0",
     "@noliaki/prettier-config": "^0.0.1",
     "@types/lodash": "^4.14.137",
-    "autoprefixer": "^9.6.1",
+    "autoprefixer": "^9.7.4",
     "browser-sync": "^2.26.7",
     "cross-env": "^6.0.0",
     "eslint": "^6.2.2",
