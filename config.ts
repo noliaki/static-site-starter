@@ -1,15 +1,9 @@
-const path = require('path')
-
-module.exports = {
-  src: path.resolve('src'),
-  dist: path.resolve('dist'),
-  docroot: path.resolve('src/docroot'),
-  pug: {
-    basedir: path.resolve('src/modules/pug'),
-    pretty: true
-  },
+export default {
+  src: 'src',
+  dist: 'dist',
+  docroot: 'src/docroot',
   stylus: {
-    includes: [path.resolve('src/modules/stylus')],
+    includes: ['src/modules/stylus'],
     autoprefixerOption: {
       grid: true
     }
