@@ -4,9 +4,9 @@ import TerserPlugin from 'terser-webpack-plugin'
 import * as webpack from 'webpack'
 import config from './config'
 
-console.log(config)
+import { srcDir, docRoot, distDir } from './scripts/util'
 
-const plugins = [
+const plugins: webpack.Plugin[] = [
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
   })
@@ -14,15 +14,16 @@ const plugins = [
 
 const webpackConfig: webpack.Configuration = {
   mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
-  context: config.docroot,
+  context: docRoot,
   entry: entries(),
   output: {
-    path: config.dist,
+    path: distDir,
     filename: '[name].js'
   },
   resolve: {
     alias: {
-      '@': `${config.src}/modules/ts`
+      '@': srcDir,
+      '~': srcDir
     },
     extensions: ['.js', '.ts']
   },
@@ -37,8 +38,25 @@ const webpackConfig: webpack.Configuration = {
   },
   plugins,
   optimization: {
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /node_modules/,
+          name: `${vendorEntry()}/vendor.bundle`,
+          chunks: 'initial',
+          enforce: true
+        },
+        modules: {
+          test: new RegExp(`${srcDir}/modules/`),
+          name: `${vendorEntry()}/module.bundle`,
+          chunks: 'initial',
+          enforce: true
+        }
+      }
+    },
     minimizer: [
       new TerserPlugin({
+        extractComments: true,
         terserOptions: {
           compress: {
             drop_console: process.env.NODE_ENV === 'production'
@@ -49,11 +67,14 @@ const webpackConfig: webpack.Configuration = {
   }
 }
 
-function entries() {
-  const files = fg.sync(`${config.docroot}/**/*.ts`)
-  const entriesObj = {}
+function entries(): { [key: string]: string } {
+  const files: string[] = fg.sync([
+    `${config.docroot}/**/*.ts`,
+    `${config.docroot}/*.ts`
+  ])
+  const entriesObj: { [key: string]: string } = {}
 
-  files.forEach(file => {
+  files.forEach((file: string): void => {
     const filePath = `./${path.relative(config.docroot, file)}`
     const key = filePath.replace(/\/ts\//g, '/js/').replace(/\.ts$/, '')
     entriesObj[key] = filePath
@@ -61,77 +82,31 @@ function entries() {
 
   return entriesObj
 }
+
+function vendorEntry(): string {
+  const files: string[] = fg.sync([`${docRoot}/**/*.ts`, `${docRoot}/*.ts`])
+
+  const results: string[] = files
+    .map((filePath: string): string =>
+      path.dirname(path.relative(docRoot, filePath))
+    )
+    .filter(
+      (dirname: string, index: number, arr: string[]): boolean =>
+        index === arr.indexOf(dirname)
+    )
+    .sort((a: string, b: string): number => a.length - b.length)
+
+  return `./${results[0]}`
+}
+
+if (process.env.NODE_ENV === 'development') {
+  webpackConfig.watch = true
+  webpackConfig.cache = true
+  plugins.push(
+    new webpack.LoaderOptionsPlugin({
+      debug: true
+    })
+  )
+}
+
 export default webpackConfig
-
-// const webpack = require('webpack')
-// const path = require('path')
-// const glob = require('glob')
-// const TerserPlugin = require('terser-webpack-plugin')
-// const plugins = [
-//   new webpack.DefinePlugin({
-//     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-//   })
-// ]
-
-// const config = require('./config')
-
-// function entries() {
-//   const files = glob.sync(`${config.docroot}/**/*.ts`)
-//   const entriesObj = {}
-//   files.forEach(file => {
-//     const filePath = `./${path.relative(config.docroot, file)}`
-//     const key = filePath.replace(/\/ts\//g, '/js/').replace(/\.ts$/, '')
-//     entriesObj[key] = filePath
-//   })
-
-//   return entriesObj
-// }
-
-// const webpackConfig = {
-//   mode: process.env.NODE_ENV,
-//   context: config.docroot,
-//   entry: entries(),
-//   output: {
-//     path: config.dist,
-//     filename: '[name].js'
-//   },
-//   resolve: {
-//     alias: {
-//       '@': `${config.src}/modules/ts`
-//     },
-//     extensions: ['.js', '.ts']
-//   },
-//   module: {
-//     rules: [
-//       {
-//         test: /\.ts$/,
-//         loader: 'ts-loader',
-//         exclude: /node_modules/
-//       }
-//     ]
-//   },
-//   plugins,
-//   optimization: {
-//     minimizer: [
-//       new TerserPlugin({
-//         terserOptions: {
-//           compress: {
-//             drop_console: process.env.NODE_ENV === 'production'
-//           }
-//         }
-//       })
-//     ]
-//   }
-// }
-
-// if (process.env.NODE_ENV === 'development') {
-//   webpackConfig.watch = true
-//   webpackConfig.cache = true
-//   webpackConfig.plugins = plugins.concat([
-//     new webpack.LoaderOptionsPlugin({
-//       debug: true
-//     })
-//   ])
-// }
-
-// module.exports = webpackConfig

@@ -3,23 +3,36 @@ import path from 'path'
 import fg from 'fast-glob'
 import stylus from 'stylus'
 import postcss from 'postcss'
+import chalk, { ChalkFunction } from 'chalk'
 import autoprefixer from 'autoprefixer'
-import { isStylus } from './util'
+import http from 'http'
+
+import {
+  stylusReg,
+  docRoot,
+  distDir,
+  srcDir,
+  writeFilePromise,
+  stylusExtension
+} from './util'
 import config from '../config'
 
+const chalkColor: ChalkFunction = chalk.magentaBright
+
 async function render(fileName: string): Promise<void> {
-  const css = await compile(filename)
-  writeFile(filename, css)
+  const css: string = await compile(fileName)
+  await writeFile(fileName, css)
 }
 
-async function compile(fileName: string): Promise<void> {
-  const css = await stylusToCss(fileName)
-  const result = await addPrefix(css)
+async function compile(fileName: string): Promise<string> {
+  const css: string = await stylusToCss(fileName)
+  const result: postcss.Result = await addPrefix(css)
 
-  result.warnings().forEach(warn => {
-    console.warn(warn.toString())
-  })
+  result
+    .warnings()
+    .forEach((warn: postcss.Warning): void => console.warn(warn.toString()))
 
+  console.log(`${chalkColor('[stylus]')} ${fileName}`)
   return result.css
 }
 
@@ -28,132 +41,79 @@ function stylusToCss(fileName: string) {
     encoding: 'utf8'
   })
 
-  return new Promise((resolve, reject) => {
-    const renderer: Stylus.Renderer = stylus(str).set(
-      'compress',
-      Boolean(config.stylus.compress) || process.env.NODE_ENV === 'production'
-    )
+  return new Promise(
+    (
+      resolve: (output: string) => void,
+      reject: (reason: any) => void
+    ): void => {
+      const renderer = stylus(str).set(
+        'compress',
+        process.env.NODE_ENV === 'production'
+      )
 
-    config.stylus.includes.forEach((path: string): void => {
-      renderer.include(path)
-    })
+      renderer.include(srcDir)
 
-    renderer.render((error, output) => {
-      if (error) {
-        reject(error)
-        throw error
-      }
+      renderer.render((error: Error, output: string): void => {
+        if (error) {
+          reject(error)
+          return
+        }
 
-      resolve(output)
-    })
+        resolve(output)
+      })
+    }
+  )
+}
+
+function addPrefix(css: string): postcss.LazyResult {
+  return postcss([autoprefixer(config.autoprefixerOption)]).process(css, {
+    from: undefined
   })
 }
 
-// const stylus = require('stylus')
-// const postcss = require('postcss')
-// const autoprefixer = require('autoprefixer')
-// const fs = require('fs')
-// const path = require('path')
-// const glob = require('fast-glob')
-// const isStylus = require('./util').isStylus
-// const config = require('../config')
+function writeFile(filename: string, cssString: string): Promise<void> {
+  const distPath = path.resolve(distDir, path.relative(docRoot, filename))
+  const cssFileName = distPath.replace(stylusReg, '.css')
 
-// async function render(filename) {
-//   const css = await compile(filename)
+  fs.mkdirSync(path.dirname(distPath), {
+    recursive: true
+  })
 
-//   writeFile(filename, css)
-// }
+  return writeFilePromise(cssFileName, cssString)
+}
 
-// async function compile(filename) {
-//   const css = await stylusToCss(filename)
-//   const result = await addPrefix(css)
+export function renderAll(): void {
+  const files: string[] = fg
+    .sync([
+      `${docRoot}/**/*.${stylusExtension}`,
+      `${docRoot}/*.${stylusExtension}`
+    ])
+    .filter((file: string): boolean => stylusReg.test(file))
 
-//   result.warnings().forEach(warn => {
-//     console.warn(warn.toString())
-//   })
+  Promise.all(files.map((file: string): Promise<void> => render(file)))
+    .then(() => console.log(`${chalkColor('[stylus]')} All Compiled`))
+    .catch((reason: any): void => console.error(reason))
+}
 
-//   return result.css
-// }
+export async function middleware(
+  req: http.IncomingMessage,
+  res: http.ServerResponse,
+  next: () => void
+): Promise<void> {
+  const url: URL = new URL(req.url, `http://${req.headers.host}`)
+  const requestPath: string = url.pathname
+  const filePath: string = path.join(
+    docRoot,
+    requestPath.replace(/\.css$/i, `.${stylusExtension}`)
+  )
 
-// function stylusToCss(filename) {
-//   const str = fs.readFileSync(filename, {
-//     encoding: 'utf8'
-//   })
+  if (!/\.css$/i.test(requestPath) || !fs.existsSync(filePath)) {
+    next()
+    return
+  }
 
-//   return new Promise((resolve, reject) => {
-//     const renderer = stylus(str).set(
-//       'compress',
-//       config.stylus.compress || process.env.NODE_ENV === 'production'
-//     )
+  const css: string = await compile(filePath)
 
-//     config.stylus.includes.forEach(path => {
-//       renderer.include(path)
-//     })
-
-//     renderer.render((error, output) => {
-//       if (error) {
-//         reject(error)
-//         throw error
-//       }
-
-//       resolve(output)
-//     })
-//   })
-// }
-
-// function writeFile(filename, string) {
-//   const distPath = path.resolve(
-//     config.dist,
-//     path.relative(config.docroot, filename)
-//   )
-//   const cssFileName = distPath.replace(/\.styl$/, '.css')
-
-//   fs.mkdirSync(path.dirname(distPath), {
-//     recursive: true
-//   })
-
-//   fs.writeFile(cssFileName, string, error => {
-//     if (error) throw error
-
-//     console.log(`CREATED stylus -> css: ${cssFileName}`)
-//   })
-// }
-
-// function addPrefix(css) {
-//   return postcss([autoprefixer(config.stylus.autoprefixerconfig)]).process(
-//     css,
-//     {
-//       from: undefined
-//     }
-//   )
-// }
-
-// function renderAll() {
-//   const files = glob
-//     .sync([`${config.docroot}/**/*.styl`, `${config.docroot}/*.styl`])
-//     .filter(file => isStylus.test(file))
-
-//   files.forEach(file => {
-//     render(file)
-//   })
-// }
-
-// async function middleware(req, res, next) {
-//   const requestPath = req._parsedUrl.pathname
-//   const filePath = path.join(
-//     config.docroot,
-//     requestPath.replace(/\.css$/i, '.styl')
-//   )
-
-//   if (!/\.css$/i.test(requestPath) || !fs.existsSync(filePath)) {
-//     next()
-//     return
-//   }
-
-//   console.log(`stylus compile: ${requestPath}`)
-
-//   const css = await compile(filePath)
-
-//   res.writeHead(200, { 'Content-Type': 'text/css' })
-//   res.end(css)
-// }
+  res.writeHead(200, { 'Content-Type': 'text/css' })
+  res.end(css)
+}

@@ -16,14 +16,14 @@ export function copyFile(fileName: string): void {
     recursive: true
   })
 
-  const src: fs.ReadStream = fs.createReadStream(fileName)
-  const dest: fs.WriteStream = fs.createWriteStream(distFile)
+  const readStream: fs.ReadStream = fs.createReadStream(fileName)
+  const writeStream: fs.WriteStream = fs.createWriteStream(distFile)
 
-  src.on('end', (): void => {
-    dest.end()
-    console.log(`${chalk.green('[copy]')} ${distFile}`)
+  readStream.on('end', (): void => {
+    writeStream.end()
+    console.log(`${chalk.blueBright('[copy]')} ${distFile}`)
   })
-  src.pipe(dest)
+  readStream.pipe(writeStream)
 }
 
 export function copyAll(): void {

@@ -1,29 +1,26 @@
 import fs from 'fs'
 import path from 'path'
 import bs from 'browser-sync'
-import { stylusMiddleware } from './stylus'
-import imageMin from './imagemin'
-import copyFile from './cp-files'
-import { isTs } from './util'
+import { middleware as stylusMiddleware } from './stylus'
+import { middleware as nunjucksMiddleware } from './nunjucks'
+import { compress, compressAll } from './imagemin'
+import { copyFile, copyAll } from './copy'
+import {
+  srcDir,
+  nunjucksReg,
+  stylusReg,
+  imageReg,
+  tsReg,
+  docRoot
+} from './util'
 import config from '../config'
-// const fs = require('fs-extra')
-// const path = require('path')
-// const bs = require('browser-sync').create()
-// const pugMiddleware = require('./pug').middleware
-// const stylusMiddleware = require('./stylus').middleware
-// const imageMin = require('./imagemin')
-// const copyFile = require('./cp-files')
-// const util = require('./util')
-// const config = require('../config')
 
-const srcDir: string = path.resolve(__dirname, '..', config.src)
-
-imageMin.compressAll()
-copyFile.copyAll()
+compressAll()
+copyAll()
 
 bs.init(
   Object.assign(config.browsersync, {
-    // middleware: [stylusMiddleware]
+    middleware: [nunjucksMiddleware, stylusMiddleware]
   })
 )
 
@@ -39,41 +36,41 @@ fs.watch(
       return
     }
 
-    const absolutePath = path.resolve(config.src, filename)
+    const absolutePath = path.resolve(srcDir, filename)
 
-    if (!fs.pathExistsSync(absolutePath)) {
+    if (!fs.existsSync(absolutePath)) {
       console.log('not exist')
       return
     }
 
-    // pug
-    if (util.isPug.test(filename)) {
-      console.log(path.relative(config.docroot, filename))
+    // nunjucks
+    if (nunjucksReg.test(filename) || /\.html$/i.test(filename)) {
+      console.log(path.relative(docRoot, filename))
       bs.reload('*.html')
       return
     }
 
     // stylus
-    if (util.isStylus.test(filename)) {
-      console.log(path.relative(config.docroot, filename))
+    if (stylusReg.test(filename)) {
+      console.log(path.relative(docRoot, filename))
       bs.reload('*.css')
       return
     }
 
-    if (/^\/?modules\//.test(filename)) {
-      return
-    }
-
     // image file
-    if (util.isImage.test(filename)) {
-      imageMin.compressImage(absolutePath)
+    if (imageReg.test(filename)) {
+      compress(absolutePath)
       return
     }
 
-    copyFile.copy(absolutePath)
+    const stats: fs.Stats = fs.statSync(absolutePath)
+
+    if (absolutePath.includes(docRoot) && stats.isFile()) {
+      copyFile(absolutePath)
+    }
   }
 )
 
-function ignoreFile(filename: string) {
-  return isTs.test(filename) || /\/\./.test(filename)
+function ignoreFile(filename: string): boolean {
+  return tsReg.test(filename) || /\/\./.test(filename)
 }
