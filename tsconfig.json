@@ -10,9 +10,13 @@
     ],
     "module": "es2015",
     "moduleResolution": "node",
-    "target": "es5"
+    "target": "es5",
+    "typeRoots": ["types"],
+
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"],
+  "paths": {
+    "~/*": ["./src/*"],
+    "@/*": ["./src/*"]
+  }
 }
