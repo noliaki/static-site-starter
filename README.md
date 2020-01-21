@@ -1,22 +1,22 @@
-# template-single-page
+# Static Site Starter Kit
 
 [![Build Status](https://travis-ci.org/noliaki/template-single-page.svg?branch=master)](https://travis-ci.org/noliaki/template-single-page)
 
-This required `yarn`
+```
+$ node -v
+v12.14.1
 
-install `yarn` before developing
+$ npm -v
+6.13.4
 
-```bash
-$ brew update
-$ brew install yarn
+$ yarn --version
+1.17.3
 ```
 
-```bash
-$ yarn install
+```sh
+# run dev
+$ yarn dev
 
-# development build
-$ yarn run build:dev
-
-# production build
-$ yarn run build:production
+# run build
+$ yarn build
 ```
