@@ -35,7 +35,10 @@
       "git add"
     ]
   },
-  "dependencies": {},
+  "dependencies": {
+    "@types/ejs": "^3.0.0",
+    "ejs": "^3.0.1"
+  },
   "devDependencies": {
     "@noliaki/eslint-config-typescript-prettier": "^0.1.0",
     "@noliaki/prettier-config": "0.0.1",

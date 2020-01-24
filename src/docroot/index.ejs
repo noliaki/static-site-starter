@@ -1,0 +1,21 @@
+<% function link(__append) { %>
+  <link rel="preload" href="js/module.bundle.js" as="script">
+<% } %>
+
+<% function script(__append) { %>
+  <script src="js/module.bundle.js" async defer></script>
+<% } %>
+<%-
+  include('/layout/head', {
+    link,
+    title: 'hogehogehoge'
+  })
+%>
+
+<h1><%= BASE_URL %></h1>
+<h2><%= URL %></h2>
+<h2><%= DOMAIN_NAME %></h2>
+<h2><%= TITLE %></h2>
+<h2><%= DESCRIPTION %></h2>
+
+<%- include('/layout/foot', { script }) %>

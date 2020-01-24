@@ -3,6 +3,7 @@ import path from 'path'
 import bs from 'browser-sync'
 import { middleware as stylusMiddleware } from './stylus'
 import { middleware as nunjucksMiddleware } from './nunjucks'
+import { middleware as ejsMiddleware } from './ejs'
 import { compress, compressAll } from './imagemin'
 import { copyFile, copyAll } from './copy'
 import {
@@ -11,7 +12,8 @@ import {
   stylusReg,
   imageReg,
   tsReg,
-  docRoot
+  docRoot,
+  ejsReg
 } from './util'
 import config from '../config'
 
@@ -20,7 +22,7 @@ copyAll()
 
 bs.init(
   Object.assign(config.browsersync, {
-    middleware: [nunjucksMiddleware, stylusMiddleware]
+    middleware: [ejsMiddleware, nunjucksMiddleware, stylusMiddleware]
   })
 )
 
@@ -40,6 +42,13 @@ fs.watch(
 
     if (!fs.existsSync(absolutePath)) {
       console.log('not exist')
+      return
+    }
+
+    // ejs
+    if (ejsReg.test(filename) || /\.html$/i.test(filename)) {
+      console.log(path.relative(docRoot, filename))
+      bs.reload('*.html')
       return
     }
 
