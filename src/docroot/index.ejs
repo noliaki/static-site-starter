@@ -1,3 +1,12 @@
+<%
+  const options = {
+    title: 'this is title',
+    description: 'this is description',
+    'og:type': 'website',
+    'og:title': 'this is og:title'
+  }
+%>
+
 <% function link(__append) { %>
   <link rel="preload" href="js/module.bundle.js" as="script">
 <% } %>
@@ -5,11 +14,9 @@
 <% function script(__append) { %>
   <script src="js/module.bundle.js" async defer></script>
 <% } %>
+
 <%-
-  include('/layout/head', {
-    link,
-    title: 'hogehogehoge'
-  })
+  include('/layout/head', options)
 %>
 
 <h1><%= BASE_URL %></h1>
