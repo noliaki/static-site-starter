@@ -1,0 +1,13 @@
+{% extends 'layout/layout.html' %}
+
+{% block content %}
+<section><h1          class="hoge">{{ TITLE | replace(r/TIT/, 'ttt') }}</h1></section>
+<h1>{{ TITLE.replace(r/TIT/, 'ttt') }}</h1>
+<h2>{{ PATH }}</h2>
+<h3>{{ DOMAIN_NAME }}</h3>
+<h4>{{ DESCRIPTION }}</h4>
+
+{% raw %}
+{{ hoge }}
+{% endraw %}
+{% endblock %}

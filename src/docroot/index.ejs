@@ -2,8 +2,23 @@
   const options = {
     title: 'this is title',
     description: 'this is description',
-    'og:type': 'website',
-    'og:title': 'this is og:title'
+    ogType: 'website',
+    ogTitle: 'this is og:title',
+    ogImage: 'this is og:image',
+    ogImageAlt: 'this is og:image:alt',
+    ogDescription: 'this is og:description',
+    ogSiteName: 'this is og:site_name',
+    ogLocale: 'this is og:locale',
+    articleAuthor: 'this is aritcle:author',
+    fbAppId: 'facebook app id',
+    twitterCard: 'summary_large_image',
+    twitterSite: 'site account',
+    twitterCreator: 'account',
+    twitterUrl: URL,
+    twitterTitle: 'twitter title',
+    twitterDescription: 'twitter description',
+    twitterImage: 'twitter image',
+    twitterImageAlt: 'twitter image alt'
   }
 %>
 
@@ -14,10 +29,9 @@
 <% function script(__append) { %>
   <script src="js/module.bundle.js" async defer></script>
 <% } %>
+<% const layoutName = '/head' %>
 
-<%-
-  include('/layout/head', options)
-%>
+<%- include(`/layout${layoutName}`, { options, link }) %>
 
 <h1><%= BASE_URL %></h1>
 <h2><%= URL %></h2>

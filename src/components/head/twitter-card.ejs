@@ -1,8 +1,16 @@
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="@site_account">
-<meta name="twitter:creator" content="@individual_account">
-<meta name="twitter:url" content="<%= URL %>">
-<meta name="twitter:title" content="<%= title %>">
-<meta name="twitter:description" content="<%= description %>">
-<meta name="twitter:image" content="<%= BASE_URL %>/image.jpg">
-<meta name="twitter:image:alt" content="<%= description %>">
+<meta name="twitter:card" content="<%= typeof twitterCard !== 'undefined' ? twitterCard : 'summary_large_image' %>">
+<% if (typeof twitterSite !== 'undefined') { %>
+  <meta name="twitter:site" content="@site_account">
+<% } %>
+<% if (typeof twitterCreator !== 'undefined') { %>
+  <meta name="twitter:creator" content="@individual_account">
+<% } %>
+<meta name="twitter:url" content="<%= typeof twitterUrl !== 'undefined' ? twitterUrl : URL %>">
+<meta name="twitter:title" content="<%= typeof twitterTitle !== 'undefined' ? twitterTitle : title %>">
+<meta name="twitter:description" content="<%= typeof twitterDescription !== 'undefined' ? twitterTitle : description %>">
+<% if (typeof twitterImage !== 'undefined') { %>
+  <meta name="twitter:image" content="<%= twitterImage %>">
+<% } %>
+<% if (typeof twitterImageAlt !== 'undefined') { %>
+  <meta name="twitter:image:alt" content="<%= description %>">
+<% } %>
