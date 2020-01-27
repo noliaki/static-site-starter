@@ -11,7 +11,9 @@
   <link rel="canonical" href="<%= CANONICAL_URL %>">
   <link rel="icon" href="/favicon.ico">
   <link rel="stylesheet" href="css/style.css">
-  <%- typeof link !== 'undefined' ? link(__append) : null %>
+  <% if (typeof link !== 'undefined') { %>
+    <%- link(__append) %>
+  <% } %>
   <title><%= options.title %></title>
 </head>
 <body>

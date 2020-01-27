@@ -2,29 +2,35 @@ import fs from 'fs'
 import path from 'path'
 import bs from 'browser-sync'
 import { middleware as stylusMiddleware } from './stylus'
-import { middleware as nunjucksMiddleware } from './nunjucks'
 import { middleware as ejsMiddleware } from './ejs'
 import { compress, compressAll } from './imagemin'
 import { copyFile, copyAll } from './copy'
 import {
   srcDir,
-  nunjucksReg,
   stylusReg,
   imageReg,
   tsReg,
   docRoot,
-  ejsReg
+  ejsReg,
+  distDir
 } from './util'
 import config from '../config'
+
+const options: bs.Options = {
+  server: {
+    baseDir: distDir,
+    directory: true
+  },
+  files: distDir
+}
 
 compressAll()
 copyAll()
 
-bs.init(
-  Object.assign(config.browsersync, {
-    middleware: [ejsMiddleware, nunjucksMiddleware, stylusMiddleware]
-  })
-)
+bs.init({
+  ...JSON.parse(JSON.stringify(Object.assign({}, options, config.browsersync))),
+  middleware: [ejsMiddleware, stylusMiddleware]
+})
 
 fs.watch(
   srcDir,
@@ -47,13 +53,6 @@ fs.watch(
 
     // ejs
     if (ejsReg.test(filename) || /\.html$/i.test(filename)) {
-      console.log(path.relative(docRoot, filename))
-      bs.reload('*.html')
-      return
-    }
-
-    // nunjucks
-    if (nunjucksReg.test(filename) || /\.html$/i.test(filename)) {
       console.log(path.relative(docRoot, filename))
       bs.reload('*.html')
       return

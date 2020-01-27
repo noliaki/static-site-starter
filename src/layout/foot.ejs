@@ -1,3 +1,5 @@
-<%- typeof script !== 'undefined' ? script(__append) : null %>
+<% if (typeof script !== 'undefined') { %>
+  <%- script(__append) %>
+<% } %>
 </body>
 </html>

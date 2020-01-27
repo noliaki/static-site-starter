@@ -29,9 +29,8 @@
 <% function script(__append) { %>
   <script src="js/module.bundle.js" async defer></script>
 <% } %>
-<% const layoutName = '/head' %>
 
-<%- include(`/layout${layoutName}`, { options, link }) %>
+<%- include('/layout/head', { options, link }) %>
 
 <h1><%= BASE_URL %></h1>
 <h2><%= URL %></h2>

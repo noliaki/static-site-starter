@@ -36,12 +36,7 @@ const config: Config = {
     }
   },
   browsersync: {
-    server: {
-      baseDir: 'dist',
-      directory: true
-    },
     startPath: '/index.html',
-    files: 'dist',
     ghostMode: false,
     logLevel: 'debug',
     reloadDebounce: 500,
