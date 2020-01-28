@@ -8,12 +8,12 @@ export const srcDir: string = path.resolve(__dirname, '..', config.src)
 export const distDir: string = path.resolve(__dirname, '..', config.dist)
 export const docRoot: string = path.resolve(__dirname, '..', config.docroot)
 
-export const nunjucksExtension: string = 'njk.html'
+export const ejsExtenstion: string = 'ejs'
 export const imageExtension: string[] = ['jpg', 'jpeg', 'gif', 'png', 'svg']
 export const stylusExtension: string = 'styl'
 export const typescriptExtension: string = 'ts'
 
-export const nunjucksReg: RegExp = new RegExp(`\\.${nunjucksExtension}$`, 'i')
+export const ejsReg: RegExp = new RegExp(`\\.${ejsExtenstion}$`, 'i')
 export const imageReg: RegExp = new RegExp(
   `\\.(${imageExtension.join('|')})$`,
   'i'
@@ -29,7 +29,7 @@ export const imageMinimatch: string = `*.{${imageExtension.join(
 
 export function shouldCopy(filename: string): boolean {
   return !(
-    nunjucksReg.test(filename) ||
+    ejsReg.test(filename) ||
     stylusReg.test(filename) ||
     imageReg.test(filename) ||
     tsReg.test(filename)

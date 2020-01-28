@@ -1,0 +1,23 @@
+<% if (typeof fbAppId !== 'undefined') { %>
+  <meta property="fb:app_id" content="<%= fbAppId %>">
+<% } %>
+<meta property="og:url" content="<%= URL %>">
+<meta property="og:type" content="<%= typeof ogType !== 'undefined' ? ogType : 'article' %>">
+<meta property="og:title" content="<%= typeof ogTitle !== 'undefined' ? ogTitle : title %>" itemprop="name">
+<% if (typeof ogImage !== 'undefined') { %>
+  <meta property="og:image" content="<%= ogImage %>">
+<% } %>
+<% if (typeof ogImageAlt !== 'undefined') { %>
+  <meta property="og:image:alt" content="<%= ogImageAlt %>">
+<% } %>
+<% if (typeof ogDescription !== 'undefined') { %>
+  <meta property="og:description" content="<%= ogDescription %>" itemprop="description">
+<% } %>
+<meta property="og:site_name" content="<%= typeof ogSiteName !== 'undefined' ? ogSiteName : title %>">
+<% if (typeof ogLocale !== 'undefined') { %>
+  <meta property="og:locale" content="ja_JP">
+<% } %>
+
+<% if (typeof articleAuthor !== 'undefined') { %>
+  <meta property="article:author" content="<%= articleAuthor %>">
+<% } %>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# mixi: http://mixi-platform.com/ns#" itemscope itemtype="http://schema.org/Article">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="format-detection" content="telephone=no, address=no, email=no">
+  <meta name="description" content="<%= options.description %>">
+  <%- include('/components/head/facebook-open-graph', options) %>
+  <%- include('/components/head/twitter-card', options) %>
+  <link rel="canonical" href="<%= CANONICAL_URL %>">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="css/style.css">
+  <%- typeof link !== 'undefined' ? link(__append) : '' %>
+  <title><%= options.title %></title>
+</head>
+<body>

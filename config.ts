@@ -9,16 +9,13 @@ const config: Config = {
   },
   htmlBeautifyOptions: {
     // https://github.com/beautify-web/js-beautify#css--html
-    //
-    // default:
-    //
-    // indent_size: 2,
-    // preserve_newlines: false,
-    // max_preserve_newlines: 0,
-    // wrap_line_length: 0,
-    // wrap_attributes_indent_size: 0,
-    // extra_liners: [],
-    // unformatted: ['b', 'em']
+    indent_size: 2,
+    preserve_newlines: false,
+    max_preserve_newlines: 0,
+    wrap_line_length: 0,
+    wrap_attributes_indent_size: 0,
+    extra_liners: [],
+    unformatted: ['b', 'em']
   },
   src: 'src',
   dist: 'dist',
@@ -39,12 +36,7 @@ const config: Config = {
     }
   },
   browsersync: {
-    server: {
-      baseDir: 'dist',
-      directory: true
-    },
     startPath: '/index.html',
-    files: 'dist',
     ghostMode: false,
     logLevel: 'debug',
     reloadDebounce: 500,

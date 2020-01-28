@@ -1,4 +1,4 @@
-import nunjucks from 'nunjucks'
+import ejs from 'ejs'
 import http from 'http'
 import path from 'path'
 import fs from 'fs'
@@ -9,33 +9,19 @@ import {
   docRoot,
   srcDir,
   distDir,
-  nunjucksExtension,
-  writeFilePromise,
-  nunjucksReg
+  ejsExtenstion,
+  ejsReg,
+  writeFilePromise
 } from './util'
 import chalk from 'chalk'
 import { WebSiteConfig } from '../types/config'
 
-const htmlBeautifyOption: HTMLBeautifyOptions = Object.assign(
-  {},
-  {
-    indent_size: 2,
-    preserve_newlines: false,
-    max_preserve_newlines: 0,
-    wrap_line_length: 0,
-    wrap_attributes_indent_size: 0,
-    extra_liners: [],
-    unformatted: ['b', 'em']
-  },
-  config.htmlBeautifyOptions
-)
 const BASE_URL: string = `${config.webSiteConfig.PROTOCOL}://${config.webSiteConfig.DOMAIN_NAME}`
+const ejsDefaultOptions: ejs.Options = {
+  root: srcDir
+}
 
-nunjucks.configure(srcDir, {
-  noCache: true
-})
-
-function createOption(
+function createData(
   pathName: string = '/'
 ): WebSiteConfig & { [key: string]: string } {
   const url: URL = new URL(pathName, BASE_URL)
@@ -48,16 +34,37 @@ function createOption(
   })
 }
 
-function renderNunjucks(njkFilePath: string, options: any = {}): string {
-  console.log(`${chalk.green('[nunjucks]')} ${njkFilePath}`)
-  const htmlSource: string = nunjucks.render(njkFilePath, options)
+function renderFile(
+  fileName: string,
+  data: any,
+  options: ejs.Options
+): Promise<string> {
+  console.log(`${chalk.green('[ejs]')} ${fileName}`)
+  return new Promise(
+    (
+      resolve: (htmlSource: string) => void,
+      reject: (reason: any) => void
+    ): void => {
+      ejs.renderFile(
+        fileName,
+        data,
+        options,
+        (err, htmlSource: string): void => {
+          if (err) {
+            reject(err)
+            return
+          }
 
-  return htmlBeautify(htmlSource, htmlBeautifyOption)
+          resolve(htmlSource)
+        }
+      )
+    }
+  )
 }
 
 function writeFile(fileName: string, htmlString: string): Promise<void> {
   const distPath = path.resolve(distDir, path.relative(docRoot, fileName))
-  const htmlFileName = distPath.replace(nunjucksReg, '.html')
+  const htmlFileName = distPath.replace(ejsReg, '.html')
 
   fs.mkdirSync(path.dirname(distPath), {
     recursive: true
@@ -66,7 +73,7 @@ function writeFile(fileName: string, htmlString: string): Promise<void> {
   return writeFilePromise(htmlFileName, htmlString)
 }
 
-export function middleware(
+export async function middleware(
   req: http.IncomingMessage,
   res: http.ServerResponse,
   next: () => void
@@ -75,7 +82,7 @@ export function middleware(
   const requestPath: string = url.pathname
   const filePath: string = path.join(
     docRoot,
-    requestPath.replace(/\.html$/i, `.${nunjucksExtension}`)
+    requestPath.replace(/\.html$/i, `.${ejsExtenstion}`)
   )
 
   if (!/\.html$/i.test(requestPath) || !fs.existsSync(filePath)) {
@@ -83,28 +90,36 @@ export function middleware(
     return
   }
 
-  const html: string = renderNunjucks(filePath, createOption(requestPath))
+  const htmlSource: string = await renderFile(
+    filePath,
+    createData(requestPath),
+    ejsDefaultOptions
+  )
 
   res.writeHead(200, { 'Content-Type': 'text/html' })
-  res.end(html)
+  res.end(htmlBeautify(htmlSource, config.htmlBeautifyOptions))
 }
 
 export function renderAll(): void {
   const nunjucksFiles: string[] = fg.sync([
-    `${docRoot}/*.${nunjucksExtension}`,
-    `${docRoot}/**/*.${nunjucksExtension}`
+    `${docRoot}/*.${ejsExtenstion}`,
+    `${docRoot}/**/*.${ejsExtenstion}`
   ])
 
   Promise.all(
     nunjucksFiles.map(
-      (fileName: string): Promise<void> => {
-        const htmlFileName: string = fileName.replace(nunjucksReg, '.html')
-        const htmlSource: string = renderNunjucks(
+      async (fileName: string): Promise<void> => {
+        const htmlFileName: string = fileName.replace(ejsReg, '.html')
+        const htmlSource: string = await renderFile(
           fileName,
-          createOption(path.relative(docRoot, htmlFileName))
+          createData(path.relative(docRoot, htmlFileName)),
+          ejsDefaultOptions
         )
 
-        return writeFile(fileName, htmlSource)
+        return writeFile(
+          fileName,
+          htmlBeautify(htmlSource, config.htmlBeautifyOptions)
+        )
       }
     )
   )
