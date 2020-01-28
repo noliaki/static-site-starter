@@ -28,7 +28,7 @@ compressAll()
 copyAll()
 
 bs.init({
-  ...JSON.parse(JSON.stringify(Object.assign({}, options, config.browsersync))),
+  ...Object.assign({}, options, config.browsersync),
   middleware: [ejsMiddleware, stylusMiddleware]
 })
 

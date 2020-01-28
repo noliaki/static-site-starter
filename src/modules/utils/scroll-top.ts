@@ -1,3 +1,7 @@
 export default (): number => {
-  return document.documentElement.scrollTop || document.body.scrollTop
+  return (
+    document.scrollingElement?.scrollTop ||
+    document.documentElement?.scrollTop ||
+    document.body.scrollTop
+  )
 }

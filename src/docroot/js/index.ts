@@ -1,7 +1,13 @@
-import '@/modules/sns-share'
-const hoge = ['hoge']
-console.log(hoge)
+import throttle from '~/modules/utils/throttle'
+import scrollTop from '~/modules/utils/scroll-top'
 
-if (hoge) {
-  console.log(hoge)
-}
+document.addEventListener(
+  'scroll',
+  throttle((event: Event): void => {
+    console.log(event)
+    console.log(scrollTop())
+  }, 200),
+  {
+    passive: true
+  }
+)

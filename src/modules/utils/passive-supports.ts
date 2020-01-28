@@ -4,7 +4,7 @@ try {
   const options: any = {
     get passive() {
       passiveSupports = true
-      return
+      return undefined
     }
   }
 

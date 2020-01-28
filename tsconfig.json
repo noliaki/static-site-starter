@@ -12,11 +12,12 @@
     "moduleResolution": "node",
     "target": "es5",
     "typeRoots": ["types"],
-
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./src/*"],
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src"],
-  "paths": {
-    "~/*": ["./src/*"],
-    "@/*": ["./src/*"]
-  }
+  "exclude": ["node_modules"]
 }

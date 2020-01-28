@@ -9,7 +9,7 @@ export default class EventEmitter {
     this.handler[eventName].push(cb)
   }
 
-  public static emit(eventName: string, ...args: any[]): void {
+  public static emit(eventName: string, ...args: any): void {
     if (this.handler[eventName] === 'undefined') {
       return
     }
