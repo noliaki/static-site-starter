@@ -1,0 +1,39 @@
+@import 'hoge.css';
+
+@custom-media --viewport-medium (width <= 50rem);
+
+:root {
+  --mainColor: #000;
+  --maxWidth: 768px;
+}
+
+body {
+  color: var(--mainColor);
+
+  .hoge {
+    margin-top: 1000px;
+  }
+}
+
+a {
+  &:hover {
+    color: red;
+  }
+
+  & img {
+    opacity: 0;
+  }
+
+  @media (--viewport-medium) {
+    margin-block: 0;
+  }
+}
+
+.fuga {
+  display: grid;
+}
+
+.flex {
+  display: flex;
+  flex-direction: column;
+}
