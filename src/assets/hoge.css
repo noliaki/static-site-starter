@@ -1,4 +1,11 @@
 @custom-media --small-viewport (max-width: 30em);
 
 @custom-selector :--heading h1, h2, h3;
-:root { --color: red; }
+
+:root {
+  --color: red;
+}
+
+html {
+  font-size: 100px;
+}

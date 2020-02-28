@@ -3,9 +3,18 @@ import path from 'path'
 import http from 'http'
 import fg from 'fast-glob'
 import postcss from 'postcss'
+import stylelint from 'stylelint'
 import postcssPresetEnv from 'postcss-preset-env'
+import postcssImport from 'postcss-import'
+import cssnano from 'cssnano'
 import chalk, { ChalkFunction } from 'chalk'
-import { postCssExtension, docRoot, distDir, writeFilePromise } from './util'
+import {
+  postCssExtension,
+  docRoot,
+  distDir,
+  writeFilePromise,
+  srcDir
+} from './util'
 import config from '../config'
 
 const chalkColor: ChalkFunction = chalk.magentaBright
@@ -17,7 +26,15 @@ async function render(fileName: string): Promise<string | { error: string }> {
   })
 
   const resultCss: string | { error: string } = await postcss([
-    postcssPresetEnv(config.postcss.preset)
+    postcssImport({
+      root: srcDir
+    }),
+    postcssPresetEnv(config.postcss.preset),
+    process.env.NODE_ENV === 'development'
+      ? stylelint({
+          fix: true
+        })
+      : cssnano()
   ])
     .process(cssString, {
       from: undefined
@@ -27,6 +44,7 @@ async function render(fileName: string): Promise<string | { error: string }> {
         console.warn(`[warning:postcss] ${warning}`)
       })
 
+      console.log(chalkColor('[postcss]'), fileName)
       return result.css
     })
     .catch((error: postcss.CssSyntaxError): { error: string } => {
