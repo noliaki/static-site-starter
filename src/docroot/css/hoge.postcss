@@ -1,18 +1,10 @@
-@import 'assets/hoge.css';
-
-@custom-media --viewport-medium (width <= 50rem);
-
-:root {
-  --mainColor: #000;
-  --maxWidth: 768px;
-}
+@import 'assets/variable.postcss';
+@import 'assets/reset';
+@import 'assets/base.postcss';
+@import 'assets/custom-media.postcss';
 
 body {
-  color: var(--mainColor);
-
-  .hoge {
-    margin-top: 1000px;
-  }
+  color: var(--colorFont);
 }
 
 a {
@@ -24,7 +16,7 @@ a {
     opacity: 0;
   }
 
-  @media (--viewport-medium) {
+  @media (--viewportS) {
     margin-block: 0;
   }
 }
