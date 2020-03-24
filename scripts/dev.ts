@@ -1,13 +1,13 @@
 import fs from 'fs'
 import path from 'path'
 import bs from 'browser-sync'
-import { middleware as stylusMiddleware } from './stylus'
+import { middleware as postcssMiddleware } from './postcss'
 import { middleware as ejsMiddleware } from './ejs'
 import { compress, compressAll } from './imagemin'
 import { copyFile, copyAll } from './copy'
 import {
   srcDir,
-  stylusReg,
+  postcssReg,
   imageReg,
   tsReg,
   docRoot,
@@ -29,7 +29,7 @@ copyAll()
 
 bs.init({
   ...Object.assign({}, options, config.browsersync),
-  middleware: [ejsMiddleware, stylusMiddleware]
+  middleware: [ejsMiddleware, postcssMiddleware]
 })
 
 fs.watch(
@@ -59,7 +59,7 @@ fs.watch(
     }
 
     // stylus
-    if (stylusReg.test(filename)) {
+    if (postcssReg.test(filename)) {
       console.log(path.relative(docRoot, filename))
       bs.reload('*.css')
       return

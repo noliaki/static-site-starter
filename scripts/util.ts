@@ -10,7 +10,7 @@ export const docRoot: string = path.resolve(__dirname, '..', config.docroot)
 
 export const ejsExtenstion: string = 'ejs'
 export const imageExtension: string[] = ['jpg', 'jpeg', 'gif', 'png', 'svg']
-export const stylusExtension: string = 'styl'
+export const postCssExtension: string = 'postcss'
 export const typescriptExtension: string = 'ts'
 
 export const ejsReg: RegExp = new RegExp(`\\.${ejsExtenstion}$`, 'i')
@@ -18,7 +18,7 @@ export const imageReg: RegExp = new RegExp(
   `\\.(${imageExtension.join('|')})$`,
   'i'
 )
-export const stylusReg: RegExp = new RegExp(`\\.${stylusExtension}$`, 'i')
+export const postcssReg: RegExp = new RegExp(`\\.${postCssExtension}$`, 'i')
 export const tsReg: RegExp = new RegExp(`\\.${typescriptExtension}$`, 'i')
 
 export const imageMinimatch: string = `*.{${imageExtension.join(
@@ -30,7 +30,7 @@ export const imageMinimatch: string = `*.{${imageExtension.join(
 export function shouldCopy(filename: string): boolean {
   return !(
     ejsReg.test(filename) ||
-    stylusReg.test(filename) ||
+    postcssReg.test(filename) ||
     imageReg.test(filename) ||
     tsReg.test(filename)
   )

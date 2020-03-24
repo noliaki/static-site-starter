@@ -17,8 +17,8 @@ export interface Config {
   src?: string
   dist?: string
   docroot?: string
-  stylus?: {
-    compress?: boolean
+  postcss?: {
+    preset?: any
   }
   autoprefixerOption?: autoprefixer.Options
   imagemin?: {

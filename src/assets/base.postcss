@@ -1,0 +1,36 @@
+@import './variable.postcss';
+
+* {
+  &,
+  &::before,
+  &::after {
+    box-sizing: border-box;
+    background-repeat: no-repeat;
+  }
+
+  &::before,
+  &::after {
+    pointer-events: none;
+  }
+}
+
+html {
+  overflow-y: scroll;
+  text-size-adjust: 100%;
+}
+
+body {
+  color: var(--colorFont);
+  text-size-adjust: 100%;
+  font-family: var(--fontFamily);
+  /* stylelint-disable property-no-unknown */
+  font-smooth: always;
+  /* stylelint-enable property-no-unknown */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: var(--lineHeight);
+}
+
+@-ms-viewport {
+  width: device-width;
+}

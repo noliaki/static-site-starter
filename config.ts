@@ -20,7 +20,17 @@ const config: Config = {
   src: 'src',
   dist: 'dist',
   docroot: 'src/docroot',
-  stylus: {},
+  postcss: {
+    preset: {
+      stage: 1,
+      autoprefixer: {
+        grid: true
+      },
+      features: {
+        'nesting-rules': true
+      }
+    }
+  },
   autoprefixerOption: {
     grid: 'autoplace'
   },

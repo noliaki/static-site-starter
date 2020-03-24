@@ -1,0 +1,31 @@
+@import 'assets/variable.postcss';
+@import 'assets/reset.postcss';
+@import 'assets/base.postcss';
+@import 'assets/custom-media.postcss';
+
+body {
+  color: var(--colorFont);
+}
+
+a {
+  &:hover {
+    color: red;
+  }
+
+  & img {
+    opacity: 0;
+  }
+
+  @media (--viewportS) {
+    margin-block: 0;
+  }
+}
+
+.fuga {
+  display: grid;
+}
+
+.flex {
+  display: flex;
+  flex-direction: column;
+}
