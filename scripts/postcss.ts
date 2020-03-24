@@ -10,6 +10,7 @@ import cssnano from 'cssnano'
 import chalk, { ChalkFunction } from 'chalk'
 import {
   postCssExtension,
+  postcssReg,
   docRoot,
   distDir,
   writeFilePromise,
@@ -61,7 +62,7 @@ async function render(fileName: string): Promise<string | { error: string }> {
 
 function writeFile(filename: string, cssString: string): Promise<void> {
   const distPath = path.resolve(distDir, path.relative(docRoot, filename))
-  const cssFileName = distPath.replace(postCssExtension, '.css')
+  const cssFileName = distPath.replace(postcssReg, '.css')
 
   fs.mkdirSync(path.dirname(distPath), {
     recursive: true

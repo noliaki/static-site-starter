@@ -28,8 +28,7 @@ const config: Config = {
       },
       features: {
         'nesting-rules': true
-      },
-      importFrom: ['src/assets/hoge.css']
+      }
     }
   },
   autoprefixerOption: {
