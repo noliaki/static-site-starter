@@ -64,7 +64,7 @@
     "fast-glob": "^3.2.2",
     "husky": "^4.2.3",
     "imagemin": "^7.0.1",
-    "imagemin-jpegtran": "^6.0.0",
+    "imagemin-jpegtran": "^7.0.0",
     "imagemin-pngquant": "^8.0.0",
     "imagemin-svgo": "^7.1.0",
     "js-beautify": "^1.10.3",
