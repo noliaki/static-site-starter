@@ -3946,14 +3946,14 @@ ignore@^5.1.1, ignore@^5.1.4:
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.1.4.tgz#84b7b3dbe64552b6ef0eca99f6743dbec6d97adf"
   integrity sha512-MzbUSahkTW1u7JpKKjY7LCARd1fU5W2rLdxlM4kdkayuCwZImjkpluF9CM1aLewYJguPDqewLam18Y6AU69A8A==
 
-imagemin-jpegtran@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/imagemin-jpegtran/-/imagemin-jpegtran-6.0.0.tgz#c8d3bcfb6ec9c561c20a987142854be70d90b04f"
-  integrity sha512-Ih+NgThzqYfEWv9t58EItncaaXIHR0u9RuhKa8CtVBlMBvY0dCIxgQJQCfwImA4AV1PMfmUKlkyIHJjb7V4z1g==
+imagemin-jpegtran@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/imagemin-jpegtran/-/imagemin-jpegtran-7.0.0.tgz#7728f84876362d489b9a1656e0cc8e2009406e6f"
+  integrity sha512-MJoyTCW8YjMJf56NorFE41SR/WkaGA3IYk4JgvMlRwguJEEd3PnP9UxA8Y2UWjquz8d+On3Ds/03ZfiiLS8xTQ==
   dependencies:
     exec-buffer "^3.0.0"
     is-jpg "^2.0.0"
-    jpegtran-bin "^4.0.0"
+    jpegtran-bin "^5.0.0"
 
 imagemin-pngquant@^8.0.0:
   version "8.0.0"
@@ -4530,10 +4530,10 @@ jest-worker@^25.1.0:
     merge-stream "^2.0.0"
     supports-color "^7.0.0"
 
-jpegtran-bin@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/jpegtran-bin/-/jpegtran-bin-4.0.0.tgz#d00aed809fba7aa6f30817e59eee4ddf198f8f10"
-  integrity sha512-2cRl1ism+wJUoYAYFt6O/rLBfpXNWG2dUWbgcEkTt5WGMnqI46eEro8T4C5zGROxKRqyKpCBSdHPvt5UYCtxaQ==
+jpegtran-bin@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/jpegtran-bin/-/jpegtran-bin-5.0.0.tgz#4fc8c0b3308299fd8ef63b325e2488f96e857e7d"
+  integrity sha512-EUcIHEeuPsmfyczHqbL6vXrD9scYXEvaBDAINfU5jmRjOrcZohRNVjr4Urlj/mDDPeD1KXFH9sA6mmEdhl1zXg==
   dependencies:
     bin-build "^3.0.0"
     bin-wrapper "^4.0.0"
