@@ -5,7 +5,7 @@ try {
     get passive() {
       passiveSupports = true
       return undefined
-    }
+    },
   }
 
   window.addEventListener('test', options, options)

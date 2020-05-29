@@ -11,7 +11,7 @@ window.addEventListener(
   resizeHandler,
   supportPassive
     ? {
-        passive: true
+        passive: true,
       }
     : false
 )

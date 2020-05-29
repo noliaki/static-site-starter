@@ -25,5 +25,5 @@ export default class EventEmitter {
 export const EventType = {
   ON_MATCH_MEDIA: 'ON_MATCH_MEDIA',
   ON_WINDOW_LOAD: 'ON_WINDOW_LOAD',
-  ON_WINDOW_RESIZE: 'ON_WINDOW_RESIZE'
+  ON_WINDOW_RESIZE: 'ON_WINDOW_RESIZE',
 }

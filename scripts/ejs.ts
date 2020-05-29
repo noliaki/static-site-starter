@@ -11,7 +11,7 @@ import {
   distDir,
   ejsExtenstion,
   ejsReg,
-  writeFilePromise
+  writeFilePromise,
 } from './util'
 import chalk from 'chalk'
 import { WebSiteConfig } from '../types/config'
@@ -25,7 +25,7 @@ interface PageData {
 
 const BASE_URL: string = `${config.webSiteConfig.PROTOCOL}://${config.webSiteConfig.DOMAIN_NAME}`
 const ejsDefaultOptions: ejs.Options = {
-  root: srcDir
+  root: srcDir,
 }
 
 function createData(pathName: string = '/'): WebSiteConfig & PageData {
@@ -35,7 +35,7 @@ function createData(pathName: string = '/'): WebSiteConfig & PageData {
     URL: url.href,
     CANONICAL_URL: url.href.replace(/\/index.html$/, '/'),
     PATH: url.pathname,
-    BASE_URL
+    BASE_URL,
   })
 }
 
@@ -72,7 +72,7 @@ function writeFile(fileName: string, htmlString: string): Promise<void> {
   const htmlFileName = distPath.replace(ejsReg, '.html')
 
   fs.mkdirSync(path.dirname(distPath), {
-    recursive: true
+    recursive: true,
   })
 
   return writeFilePromise(htmlFileName, htmlString)
@@ -108,7 +108,7 @@ export async function middleware(
 export function renderAll(): void {
   const nunjucksFiles: string[] = fg.sync([
     `${docRoot}/*.${ejsExtenstion}`,
-    `${docRoot}/**/*.${ejsExtenstion}`
+    `${docRoot}/**/*.${ejsExtenstion}`,
   ])
 
   Promise.all(

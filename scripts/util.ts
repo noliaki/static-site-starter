@@ -8,18 +8,29 @@ export const srcDir: string = path.resolve(__dirname, '..', config.src)
 export const distDir: string = path.resolve(__dirname, '..', config.dist)
 export const docRoot: string = path.resolve(__dirname, '..', config.docroot)
 
-export const ejsExtenstion: string = 'ejs'
+export const ejsExtenstion: string = 'ejs.html'
 export const imageExtension: string[] = ['jpg', 'jpeg', 'gif', 'png', 'svg']
 export const postCssExtension: string = 'postcss'
 export const typescriptExtension: string = 'ts'
 
-export const ejsReg: RegExp = new RegExp(`\\.${ejsExtenstion}$`, 'i')
-export const imageReg: RegExp = new RegExp(
-  `\\.(${imageExtension.join('|')})$`,
+export const ejsReg: RegExp = new RegExp(
+  `\\.${escapeRegExp(ejsExtenstion)}$`,
   'i'
 )
-export const postcssReg: RegExp = new RegExp(`\\.${postCssExtension}$`, 'i')
-export const tsReg: RegExp = new RegExp(`\\.${typescriptExtension}$`, 'i')
+export const imageReg: RegExp = new RegExp(
+  `\\.(${imageExtension
+    .map((ext: string): string => escapeRegExp(ext))
+    .join('|')})$`,
+  'i'
+)
+export const postcssReg: RegExp = new RegExp(
+  `\\.${escapeRegExp(postCssExtension)}$`,
+  'i'
+)
+export const tsReg: RegExp = new RegExp(
+  `\\.${escapeRegExp(typescriptExtension)}$`,
+  'i'
+)
 
 export const imageMinimatch: string = `*.{${imageExtension.join(
   ','
@@ -41,3 +52,7 @@ export const writeFilePromise: (
   data: any,
   options?: fs.WriteFileOptions
 ) => Promise<void> = util.promisify(fs.writeFile)
+
+function escapeRegExp(pattern: string): string {
+  return pattern.replace(/[.*+?^=!:${}()|[\]/\\]/g, '\\$&')
+}

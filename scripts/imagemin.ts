@@ -14,8 +14,8 @@ function optimizeImage(srcFileName: string, dest: string): void {
     plugins: [
       imageminJpegtran(config.imagemin.jpegtran),
       imageminPngquant(config.imagemin.pngquant),
-      imageminSvgo(config.imagemin.svgo)
-    ]
+      imageminSvgo(config.imagemin.svgo),
+    ],
   }).then((results: imagemin.Result[]): void => {
     results.forEach((result: imagemin.Result): void => {
       console.log(`${chalk.cyan('[imagemin]')} ${result.destinationPath}`)

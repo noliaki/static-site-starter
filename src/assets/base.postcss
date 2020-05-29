@@ -1,5 +1,7 @@
 @import './variable.postcss';
 
+/* @import './custom-media.postcss'; */
+
 * {
   &,
   &::before,
@@ -17,6 +19,10 @@
 html {
   overflow-y: scroll;
   text-size-adjust: 100%;
+
+  @media (--viewportSp) {
+    font-size: 4vw;
+  }
 }
 
 body {

@@ -8,6 +8,6 @@ document.addEventListener(
     console.log(scrollTop())
   }, 200),
   {
-    passive: true
+    passive: true,
   }
 )

@@ -12,16 +12,16 @@ import {
   tsReg,
   docRoot,
   ejsReg,
-  distDir
+  distDir,
 } from './util'
 import config from '../config'
 
 const options: bs.Options = {
   server: {
     baseDir: distDir,
-    directory: true
+    directory: true,
   },
-  files: distDir
+  files: distDir,
 }
 
 compressAll()
@@ -29,7 +29,7 @@ copyAll()
 
 bs.init({
   ...Object.assign({}, options, config.browsersync),
-  middleware: [ejsMiddleware, postcssMiddleware]
+  middleware: [ejsMiddleware, postcssMiddleware],
 })
 
 fs.watch(

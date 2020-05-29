@@ -13,7 +13,7 @@ export function copyFile(fileName: string): void {
   )
 
   fs.mkdirSync(path.dirname(distFile), {
-    recursive: true
+    recursive: true,
   })
 
   const readStream: fs.ReadStream = fs.createReadStream(fileName)

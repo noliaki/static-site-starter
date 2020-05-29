@@ -31,7 +31,7 @@
   <script src="js/index.js" async defer></script>
 <% } %>
 
-<%- include('/layout/head', { options, link }) %>
+<%- include('/layout/head.ejs.html', { options, link }) %>
 
 <h1><%= BASE_URL %></h1>
 <h2><%= URL %></h2>
@@ -39,4 +39,4 @@
 <h2><%= TITLE %></h2>
 <h2><%= DESCRIPTION %></h2>
 
-<%- include('/layout/foot', { script }) %>
+<%- include('/layout/foot.ejs.html', { script }) %>

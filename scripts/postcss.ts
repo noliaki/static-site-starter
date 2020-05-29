@@ -14,7 +14,7 @@ import {
   docRoot,
   distDir,
   writeFilePromise,
-  srcDir
+  srcDir,
 } from './util'
 import config from '../config'
 
@@ -23,22 +23,22 @@ const chalkErrorColor: ChalkFunction = chalk.red
 
 async function render(fileName: string): Promise<string | { error: string }> {
   const cssString: string = fs.readFileSync(fileName, {
-    encoding: 'utf8'
+    encoding: 'utf8',
   })
 
   const resultCss: string | { error: string } = await postcss([
     postcssImport({
-      root: srcDir
+      root: srcDir,
     }),
     postcssPresetEnv(config.postcss.preset),
     process.env.NODE_ENV === 'development'
       ? stylelint({
-          fix: true
+          fix: true,
         })
-      : cssnano()
+      : cssnano(),
   ])
     .process(cssString, {
-      from: undefined
+      from: undefined,
     })
     .then((result: postcss.Result): string => {
       result.warnings().forEach((warning: postcss.Warning): void => {
@@ -65,7 +65,7 @@ function writeFile(filename: string, cssString: string): Promise<void> {
   const cssFileName = distPath.replace(postcssReg, '.css')
 
   fs.mkdirSync(path.dirname(distPath), {
-    recursive: true
+    recursive: true,
   })
 
   return writeFilePromise(cssFileName, cssString)
@@ -74,7 +74,7 @@ function writeFile(filename: string, cssString: string): Promise<void> {
 export function renderAll(): void {
   const postcssFiles: string[] = fg.sync([
     `${docRoot}/**/*.${postCssExtension}`,
-    `${docRoot}/*.${postCssExtension}`
+    `${docRoot}/*.${postCssExtension}`,
   ])
 
   Promise.all(
@@ -111,7 +111,7 @@ export async function middleware(
   if (typeof css !== 'string') {
     res.writeHead(500, { 'Content-Type': 'application/json' }).end(
       JSON.stringify({
-        message: css.error
+        message: css.error,
       })
     )
     return

@@ -5,7 +5,7 @@ const config: Config = {
     PROTOCOL: 'https',
     DOMAIN_NAME: 'example.com',
     TITLE: 'This is TITLE',
-    DESCRIPTION: 'This is DESCRIPTION'
+    DESCRIPTION: 'This is DESCRIPTION',
   },
   htmlBeautifyOptions: {
     // https://github.com/beautify-web/js-beautify#css--html
@@ -15,7 +15,7 @@ const config: Config = {
     wrap_line_length: 0,
     wrap_attributes_indent_size: 0,
     extra_liners: [],
-    unformatted: ['b', 'em']
+    unformatted: ['b', 'em'],
   },
   src: 'src',
   dist: 'dist',
@@ -24,15 +24,12 @@ const config: Config = {
     preset: {
       stage: 1,
       autoprefixer: {
-        grid: true
+        grid: true,
       },
       features: {
-        'nesting-rules': true
-      }
-    }
-  },
-  autoprefixerOption: {
-    grid: 'autoplace'
+        'nesting-rules': true,
+      },
+    },
   },
   imagemin: {
     jpegtran: {},
@@ -40,10 +37,10 @@ const config: Config = {
     svgo: {
       plugins: [
         {
-          removeViewBox: false
-        }
-      ]
-    }
+          removeViewBox: false,
+        },
+      ],
+    },
   },
   browsersync: {
     startPath: '/index.html',
@@ -51,8 +48,8 @@ const config: Config = {
     logLevel: 'debug',
     reloadDebounce: 500,
     ui: false,
-    open: false
-  }
+    open: false,
+  },
 }
 
 export default config
