@@ -6,6 +6,7 @@ import postcss from 'postcss'
 import stylelint from 'stylelint'
 import postcssPresetEnv from 'postcss-preset-env'
 import postcssImport from 'postcss-import'
+import postcssCalc from 'postcss-calc'
 import cssnano from 'cssnano'
 import chalk, { ChalkFunction } from 'chalk'
 import {
@@ -31,6 +32,7 @@ async function render(fileName: string): Promise<string | { error: string }> {
       root: srcDir,
     }),
     postcssPresetEnv(config.postcss.preset),
+    postcssCalc(),
     process.env.NODE_ENV === 'development'
       ? stylelint({
           fix: true,
