@@ -1,4 +1,4 @@
-let passiveSupports: boolean = false
+let passiveSupports = false
 
 try {
   const options: any = {

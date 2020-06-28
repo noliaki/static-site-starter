@@ -1,24 +1,24 @@
 export default class EventEmitter {
-  private static handler: Map<string, Function> = new Map()
+  private static handler: Map<string, Set<() => void>> = new Map()
 
-  public static on(eventName: string, cb: Function): void {
-    if (this.handler[eventName] === 'undefined') {
-      this.handler[eventName] = []
+  public static on(eventName: string, fb: () => void): void {
+    if (!this.handler.has(eventName)) {
+      this.handler.set(eventName, new Set())
     }
 
-    this.handler[eventName].push(cb)
+    this.handler.get(eventName).add(fb)
   }
 
-  public static emit(eventName: string, ...args: any): void {
-    if (this.handler[eventName] === 'undefined') {
+  public static emit(eventName: string, ...args: any[]): void {
+    if (!this.handler.has(eventName)) {
       return
     }
 
-    const len: number = this.handler[eventName].length
-
-    for (let i: number = 0; i < len; i++) {
-      this.handler[eventName][i](...args)
-    }
+    this.handler
+      .get(eventName)
+      .forEach((fb: (...args: any[]) => void): void => {
+        fb(...args)
+      })
   }
 }
 

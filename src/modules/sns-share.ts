@@ -1,7 +1,7 @@
-export default function onClick(event) {
+export default function onClick(event: MouseEvent): void {
   event.preventDefault()
 
-  const href = event.currentTarget.getAttribute('href')
+  const href = (event.currentTarget as Element).getAttribute('href')
   window.open(
     href,
     'share this page',
