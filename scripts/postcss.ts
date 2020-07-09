@@ -51,8 +51,8 @@ async function render(fileName: string): Promise<string | { error: string }> {
       return result.css
     })
     .catch((error: postcss.CssSyntaxError): { error: string } => {
-      const errorSubject: string = `${error.name}: ${error.reason}`
-      const errorBody: string = `[${error.line},${error.column}] ${fileName}`
+      const errorSubject = `${error.name}: ${error.reason}`
+      const errorBody = `[${error.line},${error.column}] ${fileName}`
       console.error(chalkErrorColor(errorSubject))
       console.error(chalkColor(errorBody))
 

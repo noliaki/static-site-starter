@@ -50,6 +50,14 @@ const config: Config = {
     ui: false,
     open: false,
   },
+  webpack: {
+    vendor: {
+      name: './js/vendor.bundle',
+    },
+    module: {
+      name: './js/module.bundle',
+    },
+  },
 }
 
 export default config

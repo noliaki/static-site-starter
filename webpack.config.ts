@@ -8,8 +8,8 @@ import { srcDir, docRoot, distDir } from './scripts/util'
 
 const plugins: webpack.Plugin[] = [
   new webpack.DefinePlugin({
-    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-  })
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+  }),
 ]
 
 const webpackConfig: webpack.Configuration = {
@@ -18,59 +18,61 @@ const webpackConfig: webpack.Configuration = {
   entry: entries(),
   output: {
     path: distDir,
-    filename: '[name].js'
+    filename: '[name].js',
   },
   resolve: {
     alias: {
       '@': srcDir,
-      '~': srcDir
+      '~': srcDir,
     },
-    extensions: ['.js', '.ts']
+    extensions: ['.js', '.ts'],
   },
   module: {
     rules: [
       {
         test: /\.ts$/,
         loader: 'ts-loader',
-        exclude: /node_modules/
-      }
-    ]
+        exclude: /node_modules/,
+      },
+    ],
   },
   plugins,
   optimization: {
     splitChunks: {
       cacheGroups: {
         vendor: {
-          test: /node_modules/,
-          name: `${vendorEntry()}/vendor.bundle`,
+          test: /\/node_modules\//,
+          name:
+            config.webpack?.vendor?.name || `${vendorEntry()}/vendor.bundle`,
           chunks: 'initial',
-          enforce: true
+          enforce: true,
         },
         modules: {
           test: new RegExp(`${srcDir}/modules/`),
-          name: `${vendorEntry()}/module.bundle`,
+          name:
+            config.webpack?.module?.name || `${vendorEntry()}/module.bundle`,
           chunks: 'initial',
-          enforce: true
-        }
-      }
+          enforce: true,
+        },
+      },
     },
     minimizer: [
       new TerserPlugin({
         extractComments: true,
         terserOptions: {
           compress: {
-            drop_console: process.env.NODE_ENV === 'production'
-          }
-        }
-      })
-    ]
-  }
+            drop_console: process.env.NODE_ENV === 'production',
+          },
+        },
+      }),
+    ],
+  },
 }
 
 function entries(): { [key: string]: string } {
   const files: string[] = fg.sync([
     `${config.docroot}/**/*.ts`,
-    `${config.docroot}/*.ts`
+    `${config.docroot}/*.ts`,
   ])
   const entriesObj: { [key: string]: string } = {}
 
@@ -104,7 +106,7 @@ if (process.env.NODE_ENV === 'development') {
   webpackConfig.cache = true
   plugins.push(
     new webpack.LoaderOptionsPlugin({
-      debug: true
+      debug: true,
     })
   )
 }
