@@ -27,4 +27,12 @@ export interface Config {
     svgo?: imageminSvgo.Options
   }
   browsersync?: browsersync.Options
+  webpack?: {
+    vendor?: {
+      name: string
+    }
+    module?: {
+      name: string
+    }
+  }
 }

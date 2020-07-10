@@ -8,31 +8,25 @@ export const srcDir: string = path.resolve(__dirname, '..', config.src)
 export const distDir: string = path.resolve(__dirname, '..', config.dist)
 export const docRoot: string = path.resolve(__dirname, '..', config.docroot)
 
-export const ejsExtenstion: string = 'ejs.html'
+export const ejsExtenstion = 'ejs.html'
 export const imageExtension: string[] = ['jpg', 'jpeg', 'gif', 'png', 'svg']
-export const postCssExtension: string = 'postcss'
-export const typescriptExtension: string = 'ts'
+export const postCssExtension = 'postcss'
+export const typescriptExtension = 'ts'
 
-export const ejsReg: RegExp = new RegExp(
-  `\\.${escapeRegExp(ejsExtenstion)}$`,
-  'i'
-)
-export const imageReg: RegExp = new RegExp(
+export const ejsReg = new RegExp(`\\.${escapeRegExp(ejsExtenstion)}$`, 'i')
+export const imageReg = new RegExp(
   `\\.(${imageExtension
     .map((ext: string): string => escapeRegExp(ext))
     .join('|')})$`,
   'i'
 )
-export const postcssReg: RegExp = new RegExp(
+export const postcssReg = new RegExp(
   `\\.${escapeRegExp(postCssExtension)}$`,
   'i'
 )
-export const tsReg: RegExp = new RegExp(
-  `\\.${escapeRegExp(typescriptExtension)}$`,
-  'i'
-)
+export const tsReg = new RegExp(`\\.${escapeRegExp(typescriptExtension)}$`, 'i')
 
-export const imageMinimatch: string = `*.{${imageExtension.join(
+export const imageMinimatch = `*.{${imageExtension.join(
   ','
 )},${imageExtension
   .map((extension: string): string => extension.toUpperCase())

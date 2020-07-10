@@ -23,12 +23,12 @@ interface PageData {
   BASE_URL: string
 }
 
-const BASE_URL: string = `${config.webSiteConfig.PROTOCOL}://${config.webSiteConfig.DOMAIN_NAME}`
+const BASE_URL = `${config.webSiteConfig.PROTOCOL}://${config.webSiteConfig.DOMAIN_NAME}`
 const ejsDefaultOptions: ejs.Options = {
   root: srcDir,
 }
 
-function createData(pathName: string = '/'): WebSiteConfig & PageData {
+function createData(pathName = '/'): WebSiteConfig & PageData {
   const url: URL = new URL(pathName, BASE_URL)
 
   return Object.assign({}, config.webSiteConfig, {
